@@ -44,7 +44,7 @@ export default function Home() {
   return (
     <>
       <DefaultNavbar routes={routes} sticky />
-      <MKBox py={10} px={2}>
+      <MKBox py={10} px={{ xs: 1.5, sm: 2, md: 3 }}>
         <MKTypography variant="h3" textAlign="center" mb={4}>
           Pilih Kategori
         </MKTypography>
@@ -56,18 +56,29 @@ export default function Home() {
                 sx={{
                   cursor: "pointer",
                   height: "100%",
-                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  borderRadius: 3,
+                  overflow: "hidden",
+                  transition: "all 0.25s ease-in-out",
                   "&:hover": {
-                    transform: "scale(1.03)",
-                    boxShadow: 6,
+                    transform: "translateY(-4px) scale(1.02)",
+                    boxShadow: 8,
                   },
                 }}
                 elevation={3}
               >
-                <CardMedia component="img" height="160" image={cat.image} alt={cat.name} />
+                <CardMedia
+                  component="img"
+                  // height="160"
+                  image={cat.image}
+                  alt={cat.name}
+                  style={{ objectFit: "cover" }}
+                />
                 <CardContent>
                   <MKTypography variant="h5" textAlign="center">
                     {cat.name}
+                  </MKTypography>
+                  <MKTypography variant="body2" color="text.secondary" textAlign="center" mt={1}>
+                    {/* Lihat produk {cat.name.toLowerCase()} */}
                   </MKTypography>
                 </CardContent>
               </Card>
