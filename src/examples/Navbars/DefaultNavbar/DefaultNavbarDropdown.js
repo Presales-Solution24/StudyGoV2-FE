@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Kit 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-kit-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
@@ -22,6 +7,7 @@ import { Link } from "react-router-dom";
 // @mui material components
 import Collapse from "@mui/material/Collapse";
 import Icon from "@mui/material/Icon";
+import MuiLink from "@mui/material/Link"; // ✅ IMPORT untuk external link
 
 // Material Kit 2 React components
 import MKBox from "components/MKBox";
@@ -38,17 +24,9 @@ function DefaultNavbarDropdown({
   collapse,
   ...rest
 }) {
-  const linkComponent = {
-    component: "a",
-    href,
-    target: "_blank",
-    rel: "noreferrer",
-  };
-
-  const routeComponent = {
-    component: Link,
-    to: route,
-  };
+  const isExternal = Boolean(href);
+  const WrapperComponent = isExternal ? MuiLink : Link;
+  const componentProps = isExternal ? { href, target: "_blank", rel: "noreferrer" } : { to: route };
 
   return (
     <>
@@ -60,9 +38,16 @@ function DefaultNavbarDropdown({
         alignItems="baseline"
         color={light ? "white" : "dark"}
         opacity={light ? 1 : 0.6}
-        sx={{ cursor: "pointer", userSelect: "none" }}
-        {...(route && routeComponent)}
-        {...(href && linkComponent)}
+        sx={{
+          cursor: "pointer",
+          userSelect: "none",
+          position: "relative",
+          "&:hover .hover-underline": {
+            width: "100%",
+          },
+        }}
+        component={WrapperComponent}
+        {...componentProps}
       >
         <MKTypography
           variant="body2"
@@ -77,9 +62,21 @@ function DefaultNavbarDropdown({
           fontWeight="regular"
           textTransform="capitalize"
           color={light ? "white" : "dark"}
-          sx={{ fontWeight: "100%", ml: 1, mr: 0.25 }}
+          sx={{ ml: 1, mr: 0.25, position: "relative" }}
         >
           {name}
+          <MKBox
+            className="hover-underline"
+            sx={{
+              position: "absolute",
+              bottom: -2,
+              left: 0,
+              width: "0%",
+              height: "2px",
+              backgroundColor: light ? "white" : "#344767",
+              transition: "width 0.3s ease-in-out",
+            }}
+          />
         </MKTypography>
         <MKTypography variant="body2" color={light ? "white" : "dark"} ml="auto">
           <Icon sx={{ fontWeight: "normal", verticalAlign: "middle" }}>

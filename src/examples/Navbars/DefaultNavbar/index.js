@@ -81,25 +81,72 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
     return () => window.removeEventListener("resize", displayMobileNavbar);
   }, []);
 
-  const renderNavbarItems = routes.map(({ name, icon, href, route, collapse }) => (
-    <DefaultNavbarDropdown
-      key={name}
-      name={name}
-      icon={icon}
-      href={href}
-      route={route}
-      collapse={Boolean(collapse)}
-      onMouseEnter={({ currentTarget }) => {
-        if (collapse) {
-          setDropdown(currentTarget);
-          setDropdownEl(currentTarget);
-          setDropdownName(name);
-        }
-      }}
-      onMouseLeave={() => collapse && setDropdown(null)}
-      light={light}
-    />
-  ));
+  // const renderNavbarItems = routes.map(({ name, icon, href, route, collapse }) => (
+  //   <DefaultNavbarDropdown
+  //     key={name}
+  //     name={name}
+  //     icon={icon}
+  //     href={href}
+  //     route={route}
+  //     collapse={Boolean(collapse)}
+  //     onMouseEnter={({ currentTarget }) => {
+  //       if (collapse) {
+  //         setDropdown(currentTarget);
+  //         setDropdownEl(currentTarget);
+  //         setDropdownName(name);
+  //       }
+  //     }}
+  //     onMouseLeave={() => collapse && setDropdown(null)}
+  //     light={light}
+  //   />
+  // ));
+  const renderNavbarItems = routes
+    .filter((route) => route.name) // hanya route yang punya nama
+    .map(({ name, icon, href, route, collapse }) => (
+      <DefaultNavbarDropdown
+        key={name}
+        name={name}
+        icon={icon}
+        href={href}
+        route={route}
+        collapse={Boolean(collapse)}
+        onMouseEnter={({ currentTarget }) => {
+          if (collapse) {
+            setDropdown(currentTarget);
+            setDropdownEl(currentTarget);
+            setDropdownName(name);
+          }
+        }}
+        onMouseLeave={() => collapse && setDropdown(null)}
+        light={light}
+        sx={{
+          position: "relative",
+          px: 2,
+          py: 1,
+          display: "inline-flex",
+          alignItems: "center",
+          color: light ? "white" : "dark.main",
+          fontWeight: "500",
+          fontSize: "0.875rem",
+          textTransform: "capitalize",
+          cursor: "pointer",
+          transition: "color 0.3s ease",
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            bottom: 0,
+            left: "10%",
+            width: "0%",
+            height: "2px",
+            backgroundColor: light ? "white" : "#344767",
+            transition: "width 0.3s ease-in-out",
+          },
+          "&:hover::after": {
+            width: "80%",
+          },
+        }}
+      />
+    ));
 
   // Render the routes on the dropdown menu
   const renderRoutes = routes.map(({ name, collapse, columns, rowsPerColumn }) => {
