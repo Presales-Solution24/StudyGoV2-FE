@@ -73,6 +73,11 @@ import Home from "pages/Home";
 import Login from "pages/Login";
 import Signup from "pages/Signup"; // tambahkan ini di bagian import
 
+import AdminLayout from "layouts/Admin/AdminLayout";
+import adminRoutes from "./adminRoutes";
+// import Dashboard from "pages/Admin/Dashboard/Index";
+// import Users from "pages/Admin/Users/Index";
+
 const routes = [
   {
     name: "Home",
@@ -95,6 +100,16 @@ const routes = [
     route: "/signup",
     component: <Signup />,
     key: "signup",
+  },
+  {
+    route: "/admin/*",
+    component: <AdminLayout />,
+    key: "admin",
+    children: adminRoutes.map(({ route, component, key }) => ({
+      route,
+      component,
+      key,
+    })),
   },
 
   // {
