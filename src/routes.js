@@ -69,7 +69,9 @@ Coded by www.creative-tim.com
 // import Typography from "layouts/sections/elements/typography";
 
 import Home from "pages/Home";
+import KategoriPage from "pages/KategoriPage"; // Import halaman kategori baru
 // import CategoryPage from "pages/CategoryPage";
+
 import Login from "pages/Login";
 import Signup from "pages/Signup"; // tambahkan ini di bagian import
 
@@ -91,6 +93,12 @@ const routes = [
   //   route: "/kategori/:categoryId",
   //   component: <CategoryPage />,
   // },
+  {
+    name: "Kategori",
+    route: "/kategori/:id",
+    component: <KategoriPage />,
+  },
+
   {
     route: "/login",
     component: <Login />,
