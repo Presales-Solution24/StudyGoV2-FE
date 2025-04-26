@@ -1,5 +1,6 @@
 import Dashboard from "pages/Admin/dashboard/Index";
 import Users from "pages/Admin/users/Index";
+import CategoriesPage from "pages/Admin/categories/Index";
 
 const adminRoutes = [
   {
@@ -13,6 +14,12 @@ const adminRoutes = [
     icon: "fas fa-users",
     route: "users",
     component: <Users />,
+  },
+  {
+    name: "Kategori",
+    route: "categories",
+    icon: "fas fa-tags",
+    component: <CategoriesPage />,
   },
 ];
 
