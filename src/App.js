@@ -7,6 +7,9 @@ import theme from "assets/theme";
 import routes from "routes";
 import AdminLayout from "layouts/Admin/AdminLayout";
 import adminRoutes from "adminRoutes";
+import NotFound from "pages/Error/NotFound";
+import Forbidden from "pages/Error/Forbidden";
+import ServerError from "pages/Error/ServerError";
 
 export default function App() {
   const { pathname } = useLocation();
@@ -52,7 +55,12 @@ export default function App() {
         </Route>
 
         {/* 404 Fallback */}
-        <Route path="*" element={<Navigate to="/presentation" />} />
+        {/* <Route path="*" element={<Navigate to="/presentation" />} /> */}
+
+        {/* Tambahkan untuk error pages */}
+        <Route path="/403" element={<Forbidden />} />
+        <Route path="/500" element={<ServerError />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </ThemeProvider>
   );
