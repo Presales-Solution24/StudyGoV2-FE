@@ -85,6 +85,7 @@ const routes = [
     name: "Home",
     key: "home",
     route: "/",
+    icon: <i className="fas fa-home" />,
     component: <Home />,
   },
   // {
@@ -97,6 +98,7 @@ const routes = [
     name: "Kategori",
     route: "/kategori/:id",
     component: <KategoriPage />,
+    icon: <i className="fas fa-tags" />, // atau icon sesuai kategori
   },
 
   {

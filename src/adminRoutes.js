@@ -4,18 +4,21 @@ import CategoriesPage from "pages/Admin/categories/Index";
 
 const adminRoutes = [
   {
+    key: "dashboard",
     name: "Dashboard",
     icon: "fas fa-home",
     route: "dashboard",
     component: <Dashboard />,
   },
   {
+    key: "users",
     name: "Users",
     icon: "fas fa-users",
     route: "users",
     component: <Users />,
   },
   {
+    key: "categories",
     name: "Kategori",
     route: "categories",
     icon: "fas fa-tags",
