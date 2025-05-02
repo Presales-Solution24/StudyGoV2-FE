@@ -77,8 +77,13 @@ export default function Home() {
                   <MKTypography variant="h5" textAlign="center">
                     {cat.name}
                   </MKTypography>
-                  <MKTypography variant="body2" color="text.secondary" textAlign="center" mt={1}>
-                    {/* Lihat produk {cat.name.toLowerCase()} */}
+                  <MKTypography
+                    variant="body2"
+                    sx={{ color: "text.secondary" }}
+                    textAlign="center"
+                    mt={1}
+                  >
+                    {/* Lihat produk {cat.name.toLowerCase()} */ ""}
                   </MKTypography>
                 </CardContent>
               </Card>

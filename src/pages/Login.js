@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Switch from "@mui/material/Switch";
@@ -11,7 +13,35 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const navigate = useNavigate();
+
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMsg("");
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        { email, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      if (res.data.token) {
+        localStorage.setItem("token", `Bearer ${res.data.token}`);
+        navigate("/");
+      } else {
+        setErrorMsg("Token tidak ditemukan.");
+      }
+    } catch (err) {
+      console.error("Login error:", err.response || err.message);
+      setErrorMsg(err.response?.data?.message || "Login gagal");
+    }
+  };
 
   return (
     <MKBox
@@ -46,12 +76,31 @@ export default function Login() {
               <MKTypography variant="h4" textAlign="center" mb={2}>
                 Sign in to your account
               </MKTypography>
-              <MKBox component="form" role="form">
+
+              {errorMsg && (
+                <MKTypography color="error" textAlign="center" mb={2}>
+                  {errorMsg}
+                </MKTypography>
+              )}
+
+              <MKBox component="form" role="form" onSubmit={handleSubmit}>
                 <MKBox mb={2}>
-                  <MKInput type="email" label="Email" fullWidth />
+                  <MKInput
+                    type="email"
+                    label="Email"
+                    fullWidth
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </MKBox>
                 <MKBox mb={2}>
-                  <MKInput type="password" label="Password" fullWidth />
+                  <MKInput
+                    type="password"
+                    label="Password"
+                    fullWidth
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </MKBox>
                 <MKBox display="flex" alignItems="center" ml={-1} mb={2}>
                   <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -66,7 +115,7 @@ export default function Login() {
                   </MKTypography>
                 </MKBox>
                 <MKBox mt={2} mb={1}>
-                  <MKButton variant="gradient" color="info" fullWidth>
+                  <MKButton variant="gradient" color="info" fullWidth type="submit">
                     Sign In
                   </MKButton>
                 </MKBox>
