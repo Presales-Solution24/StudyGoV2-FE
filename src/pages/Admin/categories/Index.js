@@ -1,147 +1,25 @@
-import { useState } from "react";
-// import categoryApi from "api/categoryApi";
-import {
-  Grid,
-  Card,
-  CardContent,
-  CardActions,
-  Button,
-  TextField,
-  Typography,
-  Box,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import MKTypography from "components/MKTypography";
+import { Box, Button } from "@mui/material";
 
-function CategoriesPage() {
-  const [categories, setCategories] = useState([]);
-  const [newCategory, setNewCategory] = useState({ name: "", imageUrl: "" });
-  const [isEditing, setIsEditing] = useState(false);
-  const [editIndex, setEditIndex] = useState(null);
+import DashboardList from "./DashboardList";
+import React from "react";
 
-  const handleInputChange = (e) => {
-    setNewCategory({ ...newCategory, [e.target.name]: e.target.value });
+const DashboardPage = () => {
+  const handleAdd = () => {
+    console.log("Tambah data");
   };
 
-  const handleAddCategory = () => {
-    if (newCategory.name && newCategory.imageUrl) {
-      setCategories([...categories, newCategory]);
-      setNewCategory({ name: "", imageUrl: "" });
-    }
-  };
-
-  const handleEditCategory = (index) => {
-    setNewCategory(categories[index]);
-    setIsEditing(true);
-    setEditIndex(index);
-  };
-
-  const handleUpdateCategory = () => {
-    if (newCategory.name && newCategory.imageUrl) {
-      const updatedCategories = [...categories];
-      updatedCategories[editIndex] = newCategory;
-      setCategories(updatedCategories);
-      setNewCategory({ name: "", imageUrl: "" });
-      setIsEditing(false);
-      setEditIndex(null);
-    }
-  };
-
-  const handleDeleteCategory = (index) => {
-    const updatedCategories = categories.filter((_, i) => i !== index);
-    setCategories(updatedCategories);
+  const handleEdit = (item) => {
+    console.log("Edit item:", item);
   };
 
   return (
-    <Box>
-      <MKTypography variant="h4" mb={4}>
-        Manajemen Kategori
-      </MKTypography>
-
-      {/* Form Tambah / Edit */}
-      <Card sx={{ mb: 4 }}>
-        <CardContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={5}>
-              <TextField
-                fullWidth
-                label="Nama Kategori"
-                name="name"
-                value={newCategory.name}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={5}>
-              <TextField
-                fullWidth
-                label="URL Gambar"
-                name="imageUrl"
-                value={newCategory.imageUrl}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <Button
-                variant="contained"
-                color={isEditing ? "warning" : "primary"}
-                fullWidth
-                sx={{ height: "100%" }}
-                startIcon={isEditing ? <EditIcon /> : <AddIcon />}
-                onClick={isEditing ? handleUpdateCategory : handleAddCategory}
-              >
-                {isEditing ? "Update" : "Tambah"}
-              </Button>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-
-      {/* List Kategori */}
-      <Grid container spacing={3}>
-        {categories.map((cat, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card>
-              <CardContent>
-                <img
-                  src={cat.imageUrl}
-                  alt={cat.name}
-                  style={{
-                    width: "100%",
-                    height: "160px",
-                    objectFit: "cover",
-                    borderRadius: "8px",
-                  }}
-                />
-                <Typography variant="h6" mt={2}>
-                  {cat.name}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  size="small"
-                  color="warning"
-                  startIcon={<EditIcon />}
-                  onClick={() => handleEditCategory(index)}
-                >
-                  Edit
-                </Button>
-                <Button
-                  size="small"
-                  color="error"
-                  startIcon={<DeleteIcon />}
-                  onClick={() => handleDeleteCategory(index)}
-                >
-                  Hapus
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+    <Box p={2}>
+      <Button variant="contained" color="primary" sx={{ mb: 2 }} onClick={handleAdd}>
+        Tambah Data
+      </Button>
+      <DashboardList onEdit={handleEdit} />
     </Box>
   );
-}
+};
 
-export default CategoriesPage;
+export default DashboardPage;
