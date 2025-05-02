@@ -1,28 +1,41 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Switch from "@mui/material/Switch";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Alert from "@mui/material/Alert";
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 import MKInput from "components/MKInput";
 import MKButton from "components/MKButton";
-import { Link } from "react-router-dom";
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const navigate = useNavigate();
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg("");
+    setSuccessMsg("");
+
+    if (!email || !password) {
+      setErrorMsg("Email dan password wajib diisi.");
+      return;
+    }
 
     try {
       const res = await axios.post(
@@ -33,7 +46,8 @@ export default function Login() {
 
       if (res.data.token) {
         localStorage.setItem("token", `Bearer ${res.data.token}`);
-        navigate("/");
+        setSuccessMsg("Login berhasil! Mengalihkan...");
+        setTimeout(() => navigate("/"), 1500);
       } else {
         setErrorMsg("Token tidak ditemukan.");
       }
@@ -78,9 +92,14 @@ export default function Login() {
               </MKTypography>
 
               {errorMsg && (
-                <MKTypography color="error" textAlign="center" mb={2}>
+                <Alert severity="error" sx={{ mb: 2 }}>
                   {errorMsg}
-                </MKTypography>
+                </Alert>
+              )}
+              {successMsg && (
+                <Alert severity="success" sx={{ mb: 2 }}>
+                  {successMsg}
+                </Alert>
               )}
 
               <MKBox component="form" role="form" onSubmit={handleSubmit}>
@@ -95,11 +114,20 @@ export default function Login() {
                 </MKBox>
                 <MKBox mb={2}>
                   <MKInput
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     label="Password"
                     fullWidth
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={togglePasswordVisibility} edge="end">
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </MKBox>
                 <MKBox display="flex" alignItems="center" ml={-1} mb={2}>

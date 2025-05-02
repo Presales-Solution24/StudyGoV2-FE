@@ -1,22 +1,58 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Alert from "@mui/material/Alert";
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 import MKInput from "components/MKInput";
 import MKButton from "components/MKButton";
-import { Link } from "react-router-dom";
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    const { username, email, password } = formData;
+
+    if (!username || !email || !password) {
+      setErrorMsg("Semua field wajib diisi.");
+      return;
+    }
+
+    try {
+      await axios.post("http://localhost:5000/api/auth/register", formData);
+      setSuccessMsg("Registrasi berhasil! Mengalihkan ke halaman login...");
+      setTimeout(() => navigate("/login"), 1500);
+    } catch (err) {
+      setErrorMsg(err.response?.data?.message || "Registrasi gagal");
+    }
   };
 
   return (
@@ -52,14 +88,26 @@ export default function Signup() {
               <MKTypography variant="h4" textAlign="center" mb={2}>
                 Create an account
               </MKTypography>
-              <MKBox component="form" role="form">
+
+              {errorMsg && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {errorMsg}
+                </Alert>
+              )}
+              {successMsg && (
+                <Alert severity="success" sx={{ mb: 2 }}>
+                  {successMsg}
+                </Alert>
+              )}
+
+              <MKBox component="form" role="form" onSubmit={handleSubmit}>
                 <MKBox mb={2}>
                   <MKInput
                     type="text"
-                    label="Name"
+                    label="Username"
                     fullWidth
-                    name="name"
-                    value={formData.name}
+                    name="username"
+                    value={formData.username}
                     onChange={handleChange}
                   />
                 </MKBox>
@@ -75,16 +123,25 @@ export default function Signup() {
                 </MKBox>
                 <MKBox mb={2}>
                   <MKInput
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     label="Password"
                     fullWidth
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton onClick={togglePasswordVisibility} edge="end">
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </MKBox>
                 <MKBox mt={2} mb={1}>
-                  <MKButton variant="gradient" color="info" fullWidth>
+                  <MKButton variant="gradient" color="info" fullWidth type="submit">
                     Sign Up
                   </MKButton>
                 </MKBox>
