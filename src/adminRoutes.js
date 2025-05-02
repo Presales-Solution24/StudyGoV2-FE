@@ -1,6 +1,6 @@
-import CategoriesPage from "pages/Admin/categories/Index";
 import Dashboard from "pages/Admin/dashboard/Index";
 import Users from "pages/Admin/users/Index";
+import CategoriesPage from "pages/Admin/categories/Index";
 
 const adminRoutes = [
   {
