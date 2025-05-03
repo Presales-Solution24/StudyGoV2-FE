@@ -38,44 +38,46 @@ function Sidebar({ routes = [], mobileOpen, onSidebarToggle }) {
 
       <List>
         {Array.isArray(routes) &&
-          routes.map((route) => (
-            <ListItem key={route.name} disablePadding sx={{ display: "block" }}>
-              <Tooltip title={collapsed ? route.name : ""} placement="right" arrow>
-                <ListItemButton
-                  component={Link}
-                  to={route.route}
-                  selected={location.pathname === route.route}
-                  onClick={onSidebarToggle}
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: collapsed ? "center" : "initial",
-                    px: 2.5,
-                    "&.Mui-selected": {
-                      backgroundColor: "primary.main",
-                      color: "white",
-                      "&:hover": { backgroundColor: "primary.dark" },
-                    },
-                  }}
-                >
-                  <ListItemIcon
+          routes
+            .filter((route) => route.name) // hanya render route yang punya 'name'
+            .map((route) => (
+              <ListItem key={route.name} disablePadding sx={{ display: "block" }}>
+                <Tooltip title={collapsed ? route.name : ""} placement="right" arrow>
+                  <ListItemButton
+                    component={Link}
+                    to={route.route}
+                    selected={location.pathname === route.route}
+                    onClick={onSidebarToggle}
                     sx={{
-                      minWidth: 0,
-                      mr: collapsed ? 0 : 2,
-                      justifyContent: "center",
-                      color: "inherit",
+                      minHeight: 48,
+                      justifyContent: collapsed ? "center" : "initial",
+                      px: 2.5,
+                      "&.Mui-selected": {
+                        backgroundColor: "primary.main",
+                        color: "white",
+                        "&:hover": { backgroundColor: "primary.dark" },
+                      },
                     }}
                   >
-                    {route.icon ? (
-                      <i className={route.icon} style={{ fontSize: 20 }} />
-                    ) : (
-                      <MenuIcon sx={{ fontSize: 20 }} />
-                    )}
-                  </ListItemIcon>
-                  {!collapsed && <ListItemText primary={route.name} />}
-                </ListItemButton>
-              </Tooltip>
-            </ListItem>
-          ))}
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: collapsed ? 0 : 2,
+                        justifyContent: "center",
+                        color: "inherit",
+                      }}
+                    >
+                      {route.icon ? (
+                        <i className={route.icon} style={{ fontSize: 20 }} />
+                      ) : (
+                        <MenuIcon sx={{ fontSize: 20 }} />
+                      )}
+                    </ListItemIcon>
+                    {!collapsed && <ListItemText primary={route.name} />}
+                  </ListItemButton>
+                </Tooltip>
+              </ListItem>
+            ))}
       </List>
     </div>
   );
