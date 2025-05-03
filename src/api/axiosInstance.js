@@ -2,16 +2,24 @@
 
 import axios from "axios";
 
-// Ganti token ini dengan token yang kamu dapat dari API (sementara)
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NDYyNTkyNjJ9.8eUR3NPhPbM2bnBE_1seFbyCI0N7MIYgTjmouL8uslw";
-
+// Buat instance Axios
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || "/api", // Default base URL
+  baseURL: process.env.REACT_APP_API_BASE_URL || "/api",
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
   },
 });
+
+// Tambahkan interceptor untuk menyisipkan token ke setiap request
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token"); // Ambil token dari localStorage
+    if (token) {
+      config.headers.Authorization = token; // token sudah mengandung 'Bearer'
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 export default axiosInstance;
