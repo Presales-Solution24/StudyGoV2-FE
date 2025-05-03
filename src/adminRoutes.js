@@ -39,11 +39,13 @@ const adminRoutes = [
     key: "products-create",
     route: "products/create",
     component: <ProductForm />,
+    hidden: true,
   },
   {
     key: "products-edit",
     route: "products/edit/:id",
     component: <ProductForm />,
+    hidden: true,
   },
 ];
 

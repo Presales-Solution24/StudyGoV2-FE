@@ -39,7 +39,7 @@ function Sidebar({ routes = [], mobileOpen, onSidebarToggle }) {
       <List>
         {Array.isArray(routes) &&
           routes
-            .filter((route) => route.name) // hanya render route yang punya 'name'
+            .filter((route) => route.name && !route.hidden)
             .map((route) => (
               <ListItem key={route.name} disablePadding sx={{ display: "block" }}>
                 <Tooltip title={collapsed ? route.name : ""} placement="right" arrow>
