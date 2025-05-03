@@ -1,8 +1,9 @@
 // src/api/categoryApi.js
+
 import axiosInstance from "./axiosInstance";
 
 const categoryApi = {
-  getAll: () => axiosInstance.get("/categories"),
+  getAll: () => axiosInstance.get("/category/list"),
   getById: (id) => axiosInstance.get(`/categories/${id}`),
   create: (data) => axiosInstance.post("/categories", data),
   update: (id, data) => axiosInstance.put(`/categories/${id}`, data),
