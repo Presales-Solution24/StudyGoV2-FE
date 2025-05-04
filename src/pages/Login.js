@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Card, Grid, Alert, TextField, Button, Typography, CircularProgress } from "@mui/material";
 import MKBox from "components/MKBox";
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
@@ -27,7 +27,7 @@ export default function Login() {
     try {
       const res = await axios.post("http://localhost:5000/api/auth/login-otp", { email });
       setOtpSent(true);
-      setSuccessMsg(res.data.message || "OTP berhasil dikirim.");
+      setSuccessMsg(res.data.message || "OTP berhasil dikirim ke email.");
     } catch (err) {
       setErrorMsg(err.response?.data?.message || "Gagal mengirim OTP.");
     } finally {
@@ -76,6 +76,7 @@ export default function Login() {
           )}, url(${bgImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
       }}
     >
       <MKBox
@@ -89,8 +90,16 @@ export default function Login() {
         <Grid container justifyContent="center">
           <Grid item xs={11} sm={9} md={4}>
             <Card sx={{ padding: 4 }}>
-              <Typography variant="h4" textAlign="center" mb={2}>
-                Sign in via OTP
+              <Typography variant="h4" textAlign="center" gutterBottom>
+                Login dengan OTP
+              </Typography>
+
+              <Typography
+                variant="body2"
+                textAlign="center"
+                sx={{ mb: 2, color: "text.secondary" }}
+              >
+                Masukkan email kamu dan verifikasi dengan OTP.
               </Typography>
 
               {errorMsg && (
@@ -117,13 +126,13 @@ export default function Login() {
                 />
 
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   fullWidth
                   sx={{ mt: 1 }}
                   onClick={handleSendOtp}
                   disabled={loading || otpSent}
                 >
-                  {loading ? <CircularProgress size={20} /> : "Kirim OTP"}
+                  {loading && !otpSent ? <CircularProgress size={20} /> : "Kirim OTP"}
                 </Button>
 
                 {otpSent && (
@@ -144,11 +153,18 @@ export default function Login() {
                       sx={{ mt: 2 }}
                       disabled={loading}
                     >
-                      {loading ? <CircularProgress size={24} /> : "Login"}
+                      {loading && otpSent ? <CircularProgress size={24} /> : "Login"}
                     </Button>
                   </>
                 )}
               </form>
+
+              <Typography textAlign="center" mt={3} fontSize="0.875rem">
+                Belum punya akun?{" "}
+                <Link to="/signup" style={{ color: "#1976d2", fontWeight: 500 }}>
+                  Daftar sekarang
+                </Link>
+              </Typography>
             </Card>
           </Grid>
         </Grid>

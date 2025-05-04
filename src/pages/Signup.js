@@ -1,13 +1,9 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import Card from "@mui/material/Card";
-import Grid from "@mui/material/Grid";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
+import { Card, Grid, InputAdornment, IconButton, Alert, CircularProgress } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Alert from "@mui/material/Alert";
 import MKBox from "components/MKBox";
 import MKTypography from "components/MKTypography";
 import MKInput from "components/MKInput";
@@ -20,10 +16,13 @@ export default function Signup() {
     email: "",
     password: "",
   });
-
+  const [otp, setOtp] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [loadingRegister, setLoadingRegister] = useState(false);
+  const [loadingVerify, setLoadingVerify] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -34,24 +33,54 @@ export default function Signup() {
     setShowPassword((prev) => !prev);
   };
 
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
+    setLoadingRegister(true);
 
     const { username, email, password } = formData;
-
     if (!username || !email || !password) {
       setErrorMsg("Semua field wajib diisi.");
+      setLoadingRegister(false);
       return;
     }
 
     try {
-      await axios.post("http://localhost:5000/api/auth/register", formData);
-      setSuccessMsg("Registrasi berhasil! Mengalihkan ke halaman login...");
-      setTimeout(() => navigate("/login"), 1500);
+      await axios.post("http://localhost:5000/api/auth/register-otp", formData);
+      setIsOtpSent(true);
+      setSuccessMsg("OTP berhasil dikirim ke email.");
     } catch (err) {
       setErrorMsg(err.response?.data?.message || "Registrasi gagal");
+    } finally {
+      setLoadingRegister(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    setErrorMsg("");
+    setSuccessMsg("");
+    setLoadingVerify(true);
+
+    if (!otp) {
+      setErrorMsg("Masukkan OTP terlebih dahulu.");
+      setLoadingVerify(false);
+      return;
+    }
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/verify-otp", {
+        email: formData.email,
+        otp,
+      });
+
+      localStorage.setItem("token", res.data.token);
+      setSuccessMsg("Verifikasi berhasil. Mengalihkan...");
+      setTimeout(() => navigate("/"), 1500);
+    } catch (err) {
+      setErrorMsg(err.response?.data?.message || "OTP salah atau verifikasi gagal.");
+    } finally {
+      setLoadingVerify(false);
     }
   };
 
@@ -86,7 +115,7 @@ export default function Signup() {
           <Grid item xs={11} sm={9} md={4}>
             <Card sx={{ padding: 4 }}>
               <MKTypography variant="h4" textAlign="center" mb={2}>
-                Create an account
+                {isOtpSent ? "Verifikasi OTP" : "Create an Account"}
               </MKTypography>
 
               {errorMsg && (
@@ -100,51 +129,95 @@ export default function Signup() {
                 </Alert>
               )}
 
-              <MKBox component="form" role="form" onSubmit={handleSubmit}>
-                <MKBox mb={2}>
-                  <MKInput
-                    type="text"
-                    label="Username"
-                    fullWidth
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                  />
-                </MKBox>
-                <MKBox mb={2}>
-                  <MKInput
-                    type="email"
-                    label="Email"
-                    fullWidth
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                </MKBox>
-                <MKBox mb={2}>
-                  <MKInput
-                    type={showPassword ? "text" : "password"}
-                    label="Password"
-                    fullWidth
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton onClick={togglePasswordVisibility} edge="end">
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </MKBox>
-                <MKBox mt={2} mb={1}>
-                  <MKButton variant="gradient" color="info" fullWidth type="submit">
-                    Sign Up
-                  </MKButton>
-                </MKBox>
+              <MKBox component="form" role="form" onSubmit={handleRegister}>
+                {!isOtpSent ? (
+                  <>
+                    <MKBox mb={2}>
+                      <MKInput
+                        type="text"
+                        label="Username"
+                        fullWidth
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                      />
+                    </MKBox>
+                    <MKBox mb={2}>
+                      <MKInput
+                        type="email"
+                        label="Email"
+                        fullWidth
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                      />
+                    </MKBox>
+                    <MKBox mb={2}>
+                      <MKInput
+                        type={showPassword ? "text" : "password"}
+                        label="Password"
+                        fullWidth
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton onClick={togglePasswordVisibility} edge="end">
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </MKBox>
+                    <MKBox mt={2} mb={1}>
+                      <MKButton
+                        variant="gradient"
+                        color="info"
+                        fullWidth
+                        type="submit"
+                        disabled={loadingRegister}
+                      >
+                        {loadingRegister ? (
+                          <CircularProgress size={24} color="inherit" />
+                        ) : (
+                          "Daftar & Kirim OTP"
+                        )}
+                      </MKButton>
+                    </MKBox>
+                  </>
+                ) : (
+                  <>
+                    <MKBox mb={2}>
+                      <MKInput
+                        type="text"
+                        label="Masukkan OTP"
+                        fullWidth
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                      />
+                    </MKBox>
+                    <MKBox mt={2} mb={1}>
+                      <MKButton
+                        variant="gradient"
+                        color="info"
+                        fullWidth
+                        onClick={handleVerifyOtp}
+                        disabled={loadingVerify}
+                      >
+                        {loadingVerify ? (
+                          <CircularProgress size={24} color="inherit" />
+                        ) : (
+                          "Verifikasi OTP"
+                        )}
+                      </MKButton>
+                    </MKBox>
+                  </>
+                )}
+              </MKBox>
+
+              {!isOtpSent && (
                 <MKBox mt={3} textAlign="center">
                   <MKTypography variant="button" color="text">
                     Already have an account?{" "}
@@ -160,7 +233,7 @@ export default function Signup() {
                     </MKTypography>
                   </MKTypography>
                 </MKBox>
-              </MKBox>
+              )}
             </Card>
           </Grid>
         </Grid>

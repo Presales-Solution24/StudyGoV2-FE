@@ -79,6 +79,7 @@ import AdminLayout from "layouts/Admin/AdminLayout";
 import adminRoutes from "./adminRoutes";
 // import Dashboard from "pages/Admin/Dashboard/Index";
 // import Users from "pages/Admin/Users/Index";
+import PrivateRoute from "components/PrivateRoute";
 
 const routes = [
   {
@@ -86,7 +87,11 @@ const routes = [
     key: "home",
     route: "/",
     icon: <i className="fas fa-home" />,
-    component: <Home />,
+    component: (
+      <PrivateRoute>
+        <Home />
+      </PrivateRoute>
+    ),
   },
   // {
   //   name: "Kategori",
@@ -97,7 +102,11 @@ const routes = [
   {
     name: "Kategori",
     route: "/kategori/:id",
-    component: <KategoriPage />,
+    component: (
+      <PrivateRoute>
+        <KategoriPage />
+      </PrivateRoute>
+    ),
     icon: <i className="fas fa-tags" />, // atau icon sesuai kategori
   },
 
