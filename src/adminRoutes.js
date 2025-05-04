@@ -1,4 +1,4 @@
-import CategoriesPage from "pages/Admin/categories/Index";
+import CategoriesPage from "pages/Admin/categories/categoryList";
 import CategoryForm from "pages/Admin/categories/categoryForm";
 import Dashboard from "pages/Admin/dashboard/Index";
 import ProductForm from "pages/Admin/products/ProductForm";
@@ -33,6 +33,12 @@ const adminRoutes = [
   {
     key: "categories-create",
     route: "categories/create",
+    component: <CategoryForm />,
+    hidden: true,
+  },
+  {
+    key: "categories-create",
+    route: "categories/edit/:id",
     component: <CategoryForm />,
     hidden: true,
   },

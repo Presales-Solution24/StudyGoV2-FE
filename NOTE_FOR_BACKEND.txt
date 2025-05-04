@@ -6,3 +6,5 @@ Spek Value :
 Products :
     Gambar kasih path ke blobnya aja biar bisa ditampilkan di list
 
+All Image (list, SaveUpdate Page):
+    Frontend gabisa akses / load image buat di view
