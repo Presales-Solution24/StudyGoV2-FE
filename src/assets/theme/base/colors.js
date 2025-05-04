@@ -21,12 +21,12 @@ Coded by www.creative-tim.com
 
 export default {
   background: {
-    default: "#f0f2f5",
+    default: "#f8f9fa",
   },
 
   text: {
-    main: "#7b809a",
-    focus: "#7b809a",
+    main: "#343a40",
+    focus: "#212529",
   },
 
   transparent: {
@@ -45,43 +45,43 @@ export default {
   },
 
   primary: {
-    main: "#e91e63",
-    focus: "#e91e63",
+    main: "#1976d2", // Biru netral modern
+    focus: "#1565c0",
   },
 
   secondary: {
-    main: "#7b809a",
-    focus: "#8f93a9",
+    main: "#6c757d", // Abu-abu lembut
+    focus: "#5a6268",
   },
 
   info: {
-    main: "#1A73E8",
-    focus: "#1662C4",
+    main: "#0288d1", // Biru cerah
+    focus: "#0277bd",
   },
 
   success: {
-    main: "#4CAF50",
-    focus: "#67bb6a",
+    main: "#2e7d32", // Hijau stabil
+    focus: "#1b5e20",
   },
 
   warning: {
-    main: "#fb8c00",
-    focus: "#fc9d26",
+    main: "#ed6c02", // Oranye modern
+    focus: "#e65100",
   },
 
   error: {
-    main: "#F44335",
-    focus: "#f65f53",
+    main: "#d32f2f", // Merah jelas
+    focus: "#c62828",
   },
 
   light: {
-    main: "#f0f2f5",
-    focus: "#f0f2f5",
+    main: "#f1f3f5",
+    focus: "#e9ecef",
   },
 
   dark: {
-    main: "#344767",
-    focus: "#2c3c58",
+    main: "#212529",
+    focus: "#16191c",
   },
 
   grey: {
