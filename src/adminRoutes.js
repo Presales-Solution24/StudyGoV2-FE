@@ -5,6 +5,11 @@ import ProductForm from "pages/Admin/products/ProductForm";
 import Products from "pages/Admin/products/Index";
 import Users from "pages/Admin/users/Index";
 
+import SpecDefinitionIndex from "pages/Admin/specdefinition/SpecDefinitionIndex";
+import SpecDefinitionForm from "pages/Admin/specdefinition/SpecDefinitionForm";
+import SpecValueIndex from "pages/Admin/specvalue/SpecValueIndex";
+import SpecValueForm from "pages/Admin/specvalue/SpecValueForm";
+
 const adminRoutes = [
   {
     key: "dashboard",
@@ -40,8 +45,6 @@ const adminRoutes = [
     route: "products",
     component: <Products />,
   },
-
-  // ✅ Tidak ditampilkan di sidebar karena tidak punya name/icon
   {
     key: "products-create",
     route: "products/create",
@@ -52,6 +55,41 @@ const adminRoutes = [
     key: "products-edit",
     route: "products/edit/:id",
     component: <ProductForm />,
+    hidden: true,
+  },
+
+  // 👇 Spec Definition routes
+  {
+    key: "spec-definition",
+    name: "Spec Definition",
+    route: "spec-definition",
+    icon: "fas fa-list-alt",
+    component: <SpecDefinitionIndex />,
+  },
+  {
+    key: "spec-definition-create",
+    route: "spec-definition/create",
+    component: <SpecDefinitionForm />,
+    hidden: true,
+  },
+  {
+    key: "spec-definition-edit",
+    route: "spec-definition/edit/:id",
+    component: <SpecDefinitionForm />,
+    hidden: true,
+  },
+
+  {
+    key: "spec-value",
+    name: "Spec Value",
+    icon: "fas fa-ruler",
+    route: "spec-value",
+    component: <SpecValueIndex />,
+  },
+  {
+    key: "spec-value-edit",
+    route: "spec-value/edit/:id",
+    component: <SpecValueForm />,
     hidden: true,
   },
 ];
