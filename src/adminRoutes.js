@@ -1,8 +1,9 @@
 import CategoriesPage from "pages/Admin/categories/Index";
+import CategoryForm from "pages/Admin/categories/categoryForm";
 import Dashboard from "pages/Admin/dashboard/Index";
-import Users from "pages/Admin/users/Index";
-import Products from "pages/Admin/products/Index";
 import ProductForm from "pages/Admin/products/ProductForm";
+import Products from "pages/Admin/products/Index";
+import Users from "pages/Admin/users/Index";
 
 const adminRoutes = [
   {
@@ -25,6 +26,12 @@ const adminRoutes = [
     route: "categories",
     icon: "fas fa-tags",
     component: <CategoriesPage />,
+  },
+  {
+    key: "categories-create",
+    route: "categories/create",
+    component: <CategoryForm />,
+    hidden: true,
   },
   {
     key: "products",
