@@ -6,7 +6,6 @@ import Products from "pages/Admin/products/Index";
 import Users from "pages/Admin/users/Index";
 
 import SpecDefinitionIndex from "pages/Admin/specdefinition/SpecDefinitionIndex";
-import SpecDefinitionForm from "pages/Admin/specdefinition/SpecDefinitionForm";
 import SpecValueIndex from "pages/Admin/specvalue/SpecValueIndex";
 
 const adminRoutes = [
@@ -65,19 +64,6 @@ const adminRoutes = [
     icon: "fas fa-list-alt",
     component: <SpecDefinitionIndex />,
   },
-  {
-    key: "spec-definition-create",
-    route: "spec-definition/create",
-    component: <SpecDefinitionForm />,
-    hidden: true,
-  },
-  {
-    key: "spec-definition-edit",
-    route: "spec-definition/edit/:id",
-    component: <SpecDefinitionForm />,
-    hidden: true,
-  },
-
   {
     key: "spec-value",
     name: "Spec Value",

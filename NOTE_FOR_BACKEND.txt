@@ -1,0 +1,8 @@
+Spek Definition :
+    Better Preference tidak muncul di list
+Spek Value :
+    Better Preference tidak muncul di list
+
+Products :
+    Gambar kasih path ke blobnya aja biar bisa ditampilkan di list
+
