@@ -8,7 +8,6 @@ import Users from "pages/Admin/users/Index";
 import SpecDefinitionIndex from "pages/Admin/specdefinition/SpecDefinitionIndex";
 import SpecDefinitionForm from "pages/Admin/specdefinition/SpecDefinitionForm";
 import SpecValueIndex from "pages/Admin/specvalue/SpecValueIndex";
-import SpecValueForm from "pages/Admin/specvalue/SpecValueForm";
 
 const adminRoutes = [
   {
@@ -85,12 +84,6 @@ const adminRoutes = [
     icon: "fas fa-ruler",
     route: "spec-value",
     component: <SpecValueIndex />,
-  },
-  {
-    key: "spec-value-edit",
-    route: "spec-value/edit/:id",
-    component: <SpecValueForm />,
-    hidden: true,
   },
 ];
 
