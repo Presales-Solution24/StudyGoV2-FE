@@ -1,59 +1,63 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
-import Card from "@mui/material/Card";
-import Grid from "@mui/material/Grid";
-import Switch from "@mui/material/Switch";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Alert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
+import { Card, Grid, Alert, TextField, Button, Typography, CircularProgress } from "@mui/material";
 import MKBox from "components/MKBox";
-import MKTypography from "components/MKTypography";
-import MKInput from "components/MKInput";
-import MKButton from "components/MKButton";
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 export default function Login() {
-  const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
-  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+  const handleSendOtp = async () => {
+    setErrorMsg("");
+    setSuccessMsg("");
 
-  const handleSubmit = async (e) => {
+    if (!email) {
+      setErrorMsg("Email wajib diisi.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/login-otp", { email });
+      setOtpSent(true);
+      setSuccessMsg(res.data.message || "OTP berhasil dikirim.");
+    } catch (err) {
+      setErrorMsg(err.response?.data?.message || "Gagal mengirim OTP.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
 
-    if (!email || !password) {
-      setErrorMsg("Email dan password wajib diisi.");
+    if (!otp) {
+      setErrorMsg("OTP wajib diisi.");
       return;
     }
 
+    setLoading(true);
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        { email, password },
-        { headers: { "Content-Type": "application/json" } }
-      );
-
-      if (res.data.token) {
-        localStorage.setItem("token", `Bearer ${res.data.token}`);
-        setSuccessMsg("Login berhasil! Mengalihkan...");
-        setTimeout(() => navigate("/"), 1500);
-      } else {
-        setErrorMsg("Token tidak ditemukan.");
-      }
+      const res = await axios.post("http://localhost:5000/api/auth/verify-otp", {
+        email,
+        otp,
+      });
+      localStorage.setItem("token", `Bearer ${res.data.token}`);
+      setSuccessMsg("Login berhasil! Mengalihkan...");
+      setTimeout(() => navigate("/"), 1500);
     } catch (err) {
-      console.error("Login error:", err.response || err.message);
       setErrorMsg(err.response?.data?.message || "Login gagal");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,7 +68,6 @@ export default function Login() {
       left={0}
       width="100%"
       minHeight="100vh"
-      zIndex={1}
       sx={{
         backgroundImage: ({ functions: { linearGradient, rgba }, palette: { gradients } }) =>
           `${linearGradient(
@@ -73,7 +76,6 @@ export default function Login() {
           )}, url(${bgImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
       }}
     >
       <MKBox
@@ -87,9 +89,9 @@ export default function Login() {
         <Grid container justifyContent="center">
           <Grid item xs={11} sm={9} md={4}>
             <Card sx={{ padding: 4 }}>
-              <MKTypography variant="h4" textAlign="center" mb={2}>
-                Sign in to your account
-              </MKTypography>
+              <Typography variant="h4" textAlign="center" mb={2}>
+                Sign in via OTP
+              </Typography>
 
               {errorMsg && (
                 <Alert severity="error" sx={{ mb: 2 }}>
@@ -102,67 +104,51 @@ export default function Login() {
                 </Alert>
               )}
 
-              <MKBox component="form" role="form" onSubmit={handleSubmit}>
-                <MKBox mb={2}>
-                  <MKInput
-                    type="email"
-                    label="Email"
-                    fullWidth
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </MKBox>
-                <MKBox mb={2}>
-                  <MKInput
-                    type={showPassword ? "text" : "password"}
-                    label="Password"
-                    fullWidth
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton onClick={togglePasswordVisibility} edge="end">
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </MKBox>
-                <MKBox display="flex" alignItems="center" ml={-1} mb={2}>
-                  <Switch checked={rememberMe} onChange={handleSetRememberMe} />
-                  <MKTypography
-                    variant="button"
-                    fontWeight="regular"
-                    color="text"
-                    onClick={handleSetRememberMe}
-                    sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-                  >
-                    &nbsp;&nbsp;Remember me
-                  </MKTypography>
-                </MKBox>
-                <MKBox mt={2} mb={1}>
-                  <MKButton variant="gradient" color="info" fullWidth type="submit">
-                    Sign In
-                  </MKButton>
-                </MKBox>
-                <MKBox mt={3} textAlign="center">
-                  <MKTypography variant="button" color="text">
-                    Don&apos;t have an account?{" "}
-                    <MKTypography
-                      component={Link}
-                      to="/signup"
-                      variant="button"
-                      color="info"
-                      fontWeight="medium"
-                      textGradient
+              <form onSubmit={handleLogin}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  margin="normal"
+                  required
+                  disabled={otpSent}
+                />
+
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  sx={{ mt: 1 }}
+                  onClick={handleSendOtp}
+                  disabled={loading || otpSent}
+                >
+                  {loading ? <CircularProgress size={20} /> : "Kirim OTP"}
+                </Button>
+
+                {otpSent && (
+                  <>
+                    <TextField
+                      fullWidth
+                      label="OTP"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      margin="normal"
+                      required
+                    />
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      color="primary"
+                      type="submit"
+                      sx={{ mt: 2 }}
+                      disabled={loading}
                     >
-                      Sign Up
-                    </MKTypography>
-                  </MKTypography>
-                </MKBox>
-              </MKBox>
+                      {loading ? <CircularProgress size={24} /> : "Login"}
+                    </Button>
+                  </>
+                )}
+              </form>
             </Card>
           </Grid>
         </Grid>

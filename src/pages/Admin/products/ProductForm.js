@@ -9,7 +9,11 @@ import {
   Button,
   Typography,
   CircularProgress,
+  Alert,
+  Box,
 } from "@mui/material";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import imageCompression from "browser-image-compression";
 
 export default function ProductForm() {
   const { id } = useParams();
@@ -48,7 +52,7 @@ export default function ProductForm() {
     try {
       const res = await axiosInstance.get(`/product/get/${id}`);
       const { name, brand, category_id, image_url } = res.data;
-      setFormData({ name, brand, category_id });
+      setFormData({ name, brand, category_id: String(category_id) });
       if (image_url) setPreviewUrl(`${axiosInstance.defaults.baseURL}${image_url}`);
     } catch (err) {
       console.error("Gagal memuat detail produk:", err);
@@ -59,29 +63,44 @@ export default function ProductForm() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     setImageError("");
+    if (!file) return;
 
-    if (file) {
-      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-        setImage(null);
-        setPreviewUrl(null);
-        setImageError("Tipe file tidak valid. Gunakan JPG, PNG, atau GIF.");
-        return;
-      }
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      setImage(null);
+      setPreviewUrl(null);
+      setImageError("Tipe file tidak valid. Gunakan JPG, PNG, atau GIF.");
+      return;
+    }
+
+    try {
+      let finalImage = file;
 
       if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
-        setImage(null);
-        setPreviewUrl(null);
-        setImageError(`Ukuran gambar maksimal ${MAX_IMAGE_SIZE_MB}MB.`);
-        return;
+        const options = {
+          maxSizeMB: MAX_IMAGE_SIZE_MB,
+          maxWidthOrHeight: 1024,
+          useWebWorker: true,
+        };
+        finalImage = await imageCompression(file, options);
+        setImageError(
+          `Gambar dikompresi dari ${(file.size / 1024 / 1024).toFixed(2)}MB menjadi ${(
+            finalImage.size /
+            1024 /
+            1024
+          ).toFixed(2)}MB`
+        );
       }
 
-      setImage(file);
+      setImage(finalImage);
       const reader = new FileReader();
       reader.onloadend = () => setPreviewUrl(reader.result);
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(finalImage);
+    } catch (err) {
+      console.error("Gagal mengompresi gambar:", err);
+      setImageError("Gagal mengompresi gambar");
     }
   };
 
@@ -89,10 +108,16 @@ export default function ProductForm() {
     e.preventDefault();
     setLoading(true);
 
+    if (!formData.name || !formData.brand || !formData.category_id) {
+      alert("Nama, Brand, dan Kategori wajib diisi.");
+      setLoading(false);
+      return;
+    }
+
     const payload = new FormData();
     if (id) payload.append("id", id);
-    payload.append("name", formData.name);
-    payload.append("brand", formData.brand);
+    payload.append("name", formData.name.trim());
+    payload.append("brand", formData.brand.trim());
     payload.append("category_id", formData.category_id);
     if (image) payload.append("image", image);
 
@@ -111,7 +136,7 @@ export default function ProductForm() {
     <Grid container justifyContent="center">
       <Grid item xs={12} md={6}>
         <Card sx={{ p: 4, mt: 4 }}>
-          <Typography variant="h5" mb={2}>
+          <Typography variant="h5" fontWeight="bold" mb={3}>
             {id ? "Edit Produk" : "Tambah Produk"}
           </Typography>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -142,38 +167,57 @@ export default function ProductForm() {
               onChange={handleChange}
               margin="normal"
               required
+              sx={{
+                ".MuiInputBase-root": {
+                  minHeight: 50,
+                  display: "flex",
+                  alignItems: "center",
+                },
+                ".MuiSelect-select": {
+                  display: "flex",
+                  alignItems: "center",
+                  py: 1.5,
+                },
+              }}
             >
               {categories.map((cat) => (
-                <MenuItem key={cat.id} value={cat.id}>
+                <MenuItem key={cat.id} value={String(cat.id)}>
                   {cat.name}
                 </MenuItem>
               ))}
             </TextField>
 
-            <Button variant="outlined" component="label" sx={{ mt: 2 }}>
+            <Button
+              variant="outlined"
+              component="label"
+              startIcon={<UploadFileIcon />}
+              sx={{ mt: 3 }}
+              fullWidth
+            >
               Upload Gambar
               <input hidden type="file" accept="image/*" onChange={handleImageChange} />
             </Button>
 
             {imageError && (
-              <Typography mt={1} color="error" fontSize={14}>
+              <Alert severity="info" sx={{ mt: 2 }}>
                 {imageError}
-              </Typography>
+              </Alert>
             )}
 
             {previewUrl && (
-              <img
-                src={previewUrl}
-                alt="Preview"
-                style={{
-                  width: "100%",
-                  maxHeight: 250,
-                  objectFit: "contain",
-                  marginTop: 12,
-                  borderRadius: 4,
-                  border: "1px solid #ccc",
-                }}
-              />
+              <Box mt={2}>
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  style={{
+                    width: "100%",
+                    maxHeight: 250,
+                    objectFit: "contain",
+                    borderRadius: 4,
+                    border: "1px solid #ccc",
+                  }}
+                />
+              </Box>
             )}
 
             <Button
@@ -181,10 +225,10 @@ export default function ProductForm() {
               color="primary"
               fullWidth
               type="submit"
-              sx={{ mt: 3 }}
+              sx={{ mt: 4, color: "white" }}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={24} /> : "Simpan"}
+              {loading ? <CircularProgress size={24} color="inherit" /> : "Simpan Produk"}
             </Button>
           </form>
         </Card>

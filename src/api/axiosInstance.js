@@ -5,9 +5,9 @@ import axios from "axios";
 // Buat instance Axios
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL || "/api",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  // headers: {
+  //   "Content-Type": "application/json",
+  // },
 });
 
 // Tambahkan interceptor untuk menyisipkan token ke setiap request

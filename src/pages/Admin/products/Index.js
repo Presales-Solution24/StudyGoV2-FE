@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "api/axiosInstance";
-import MKBox from "components/MKBox";
-import MKTypography from "components/MKTypography";
-import MKButton from "components/MKButton";
-import { IconButton, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TableContainer,
+  Paper,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function ProductIndex() {
   const [products, setProducts] = useState([]);
@@ -37,42 +47,61 @@ export default function ProductIndex() {
   }, []);
 
   return (
-    <MKBox p={3}>
-      <MKTypography variant="h4" mb={2}>
-        Daftar Produk
-      </MKTypography>
+    <Box p={3}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        <Typography variant="h4">Daftar Produk</Typography>
+        <Button
+          variant="contained"
+          color="info"
+          startIcon={<AddIcon />}
+          onClick={() => navigate("/admin/products/create")}
+        >
+          Tambah Produk
+        </Button>
+      </Box>
 
-      <MKButton color="info" onClick={() => navigate("/admin/products/create")} sx={{ mb: 2 }}>
-        Tambah Produk
-      </MKButton>
-
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>No</TableCell>
-            <TableCell>Nama Produk</TableCell>
-            <TableCell>Brand</TableCell>
-            <TableCell>Aksi</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {products.map((product, index) => (
-            <TableRow key={product.id}>
-              <TableCell>{index + 1}</TableCell>
-              <TableCell>{product.name}</TableCell>
-              <TableCell>{product.brand}</TableCell>
-              <TableCell>
-                <IconButton onClick={() => navigate(`/admin/products/edit/${product.id}`)}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton color="error" onClick={() => handleDelete(product.id)}>
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead sx={{ display: "table-header-group", backgroundColor: "#f5f5f5" }}>
+            <TableRow>
+              <TableCell>No</TableCell>
+              <TableCell>Nama Produk</TableCell>
+              <TableCell>Brand</TableCell>
+              <TableCell>Aksi</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </MKBox>
+          </TableHead>
+          <TableBody>
+            {products.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} align="center">
+                  Tidak ada data produk.
+                </TableCell>
+              </TableRow>
+            ) : (
+              products.map((product, index) => (
+                <TableRow key={product.id}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{product.name}</TableCell>
+                  <TableCell>{product.brand}</TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => navigate(`/admin/products/edit/${product.id}`)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton color="error" onClick={() => handleDelete(product.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                  {/* <TableCell>
+                    <IconButton color="error" onClick={() => handleDelete(product.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell> */}
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 }
