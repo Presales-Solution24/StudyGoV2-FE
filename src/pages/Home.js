@@ -1,41 +1,52 @@
-import React from "react";
-import { Grid, Card, CardContent, CardMedia } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Grid, Card, CardContent, CardMedia, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import DefaultNavbar from "../examples/Navbars/DefaultNavbar";
 import routes from "../routes";
 import MKBox from "../components/MKBox";
 import MKTypography from "../components/MKTypography";
 
-const categories = [
-  {
-    id: "printer",
-    name: "Printer",
-    image: "https://picsum.photos/id/1015/600/400",
-  },
-  {
-    id: "scanner",
-    name: "Scanner",
-    image: "https://picsum.photos/id/1020/600/400",
-  },
-  {
-    id: "label-printer",
-    name: "Label Printer",
-    image: "https://picsum.photos/id/1040/600/400",
-  },
-  {
-    id: "projector",
-    name: "Projector",
-    image: "https://picsum.photos/id/1060/600/400",
-  },
-  {
-    id: "ink",
-    name: "Ink & Supplies",
-    image: "https://picsum.photos/id/1080/600/400",
-  },
-];
-
 export default function Home() {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  const fetchCategories = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        alert("Unauthorized. Silakan login dulu.");
+        navigate("/login");
+        return;
+      }
+
+      const response = await fetch("http://localhost:5000/api/category/list", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+
+      if (response.status === 401) {
+        alert("Session habis. Silakan login ulang.");
+        navigate("/login");
+        return;
+      }
+
+      const data = await response.json();
+      setCategories(data.categories);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const handleCategoryClick = (categoryId) => {
     navigate(`/kategori/${categoryId}`);
@@ -48,48 +59,47 @@ export default function Home() {
         <MKTypography variant="h3" textAlign="center" mb={4}>
           Pilih Kategori
         </MKTypography>
-        <Grid container spacing={3} justifyContent="center">
-          {categories.map((cat) => (
-            <Grid item xs={12} sm={6} md={4} key={cat.id}>
-              <Card
-                onClick={() => handleCategoryClick(cat.id)}
-                sx={{
-                  cursor: "pointer",
-                  height: "100%",
-                  borderRadius: 3,
-                  overflow: "hidden",
-                  transition: "all 0.25s ease-in-out",
-                  "&:hover": {
-                    transform: "translateY(-4px) scale(1.02)",
-                    boxShadow: 8,
-                  },
-                }}
-                elevation={3}
-              >
-                <CardMedia
-                  component="img"
-                  // height="160"
-                  image={cat.image}
-                  alt={cat.name}
-                  style={{ objectFit: "cover" }}
-                />
-                <CardContent>
-                  <MKTypography variant="h5" textAlign="center">
-                    {cat.name}
-                  </MKTypography>
-                  <MKTypography
-                    variant="body2"
-                    sx={{ color: "text.secondary" }}
-                    textAlign="center"
-                    mt={1}
-                  >
-                    {/* Lihat produk {cat.name.toLowerCase()} */ ""}
-                  </MKTypography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+
+        {loading ? (
+          <MKBox display="flex" justifyContent="center" alignItems="center" height="200px">
+            <CircularProgress />
+          </MKBox>
+        ) : (
+          <Grid container spacing={3} justifyContent="center">
+            {categories.map((cat) => (
+              <Grid item xs={12} sm={6} md={4} key={cat.id}>
+                <Card
+                  onClick={() => handleCategoryClick(cat.id)}
+                  sx={{
+                    cursor: "pointer",
+                    height: "100%",
+                    borderRadius: 3,
+                    overflow: "hidden",
+                    transition: "all 0.25s ease-in-out",
+                    "&:hover": {
+                      transform: "translateY(-4px) scale(1.02)",
+                      boxShadow: 8,
+                    },
+                  }}
+                  elevation={3}
+                >
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={`http://localhost:5000${cat.image_url}`}
+                    alt={cat.name}
+                    style={{ objectFit: "cover" }}
+                  />
+                  <CardContent>
+                    <MKTypography variant="h5" textAlign="center">
+                      {cat.name}
+                    </MKTypography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </MKBox>
     </>
   );

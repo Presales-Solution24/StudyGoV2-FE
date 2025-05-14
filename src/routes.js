@@ -79,6 +79,7 @@ import AdminLayout from "layouts/Admin/AdminLayout";
 import adminRoutes from "./adminRoutes";
 // import Dashboard from "pages/Admin/Dashboard/Index";
 // import Users from "pages/Admin/Users/Index";
+import ContentListPage from "pages/ContentListPage";
 import PrivateRoute from "components/PrivateRoute";
 
 const routes = [
@@ -109,7 +110,11 @@ const routes = [
     ),
     icon: <i className="fas fa-tags" />, // atau icon sesuai kategori
   },
-
+  {
+    name: "Content List",
+    route: "/kategori/:id/konten/:type",
+    component: <ContentListPage />,
+  },
   {
     route: "/login",
     component: <Login />,

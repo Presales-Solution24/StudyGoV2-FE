@@ -1,5 +1,7 @@
 import CategoriesPage from "pages/Admin/categories/categoryList";
 import CategoryForm from "pages/Admin/categories/categoryForm";
+import ContentForm from "pages/Admin/contents/contentForm";
+import ContentList from "pages/Admin/contents/contentList";
 import Dashboard from "pages/Admin/dashboard/Index";
 import ProductForm from "pages/Admin/products/ProductForm";
 import Products from "pages/Admin/products/Index";
@@ -37,10 +39,23 @@ const adminRoutes = [
     hidden: true,
   },
   {
-    key: "categories-create",
-    route: "categories/edit/:id",
-    component: <CategoryForm />,
-    hidden: true,
+    key: "contents",
+    name: "Konten",
+    route: "contents",
+    icon: "fas fa-tags",
+    component: <ContentList />,
+  },
+  {
+    key: "contents-create", // Halaman untuk Add Content
+    route: "contents/create",
+    component: <ContentForm />,
+    hidden: true, // jika ingin disembunyikan dari sidebar atau menu
+  },
+  {
+    key: "contents-edit", // Halaman untuk Edit Content
+    route: "contents/edit/:id",
+    component: <ContentForm />,
+    hidden: true, // jika ingin disembunyikan dari sidebar atau menu
   },
   {
     key: "products",
