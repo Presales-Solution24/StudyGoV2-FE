@@ -70,6 +70,7 @@ Coded by www.creative-tim.com
 
 import Home from "pages/Home";
 import KategoriPage from "pages/KategoriPage"; // Import halaman kategori baru
+import ContentListPage from "pages/ContentListPage";
 // import CategoryPage from "pages/CategoryPage";
 
 import Login from "pages/Login";
@@ -79,7 +80,6 @@ import AdminLayout from "layouts/Admin/AdminLayout";
 import adminRoutes from "./adminRoutes";
 // import Dashboard from "pages/Admin/Dashboard/Index";
 // import Users from "pages/Admin/Users/Index";
-import ContentListPage from "pages/ContentListPage";
 import PrivateRoute from "components/PrivateRoute";
 
 const routes = [
@@ -94,26 +94,21 @@ const routes = [
       </PrivateRoute>
     ),
   },
-  // {
-  //   name: "Kategori",
-  //   key: "kategori",
-  //   route: "/kategori/:categoryId",
-  //   component: <CategoryPage />,
-  // },
   {
-    name: "Kategori",
     route: "/kategori/:id",
     component: (
       <PrivateRoute>
         <KategoriPage />
       </PrivateRoute>
     ),
-    icon: <i className="fas fa-tags" />, // atau icon sesuai kategori
   },
   {
-    name: "Content List",
     route: "/kategori/:id/konten/:type",
-    component: <ContentListPage />,
+    component: (
+      <PrivateRoute>
+        <ContentListPage />
+      </PrivateRoute>
+    ),
   },
   {
     route: "/login",
