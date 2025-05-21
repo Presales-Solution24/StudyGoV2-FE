@@ -69,17 +69,14 @@ Coded by www.creative-tim.com
 // import Typography from "layouts/sections/elements/typography";
 
 import Home from "pages/Home";
-import KategoriPage from "pages/KategoriPage"; // Import halaman kategori baru
+import KategoriPage from "pages/KategoriPage";
 import ContentListPage from "pages/ContentListPage";
-// import CategoryPage from "pages/CategoryPage";
 
 import Login from "pages/Login";
-import Signup from "pages/Signup"; // tambahkan ini di bagian import
+import Signup from "pages/Signup";
 
 import AdminLayout from "layouts/Admin/AdminLayout";
 import adminRoutes from "./adminRoutes";
-// import Dashboard from "pages/Admin/Dashboard/Index";
-// import Users from "pages/Admin/Users/Index";
 import PrivateRoute from "components/PrivateRoute";
 
 const routes = [
