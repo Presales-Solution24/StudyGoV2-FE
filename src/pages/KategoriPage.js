@@ -34,6 +34,11 @@ export default function KategoriPage() {
 
   const contentTypes = [
     {
+      title: "Tipe Produk",
+      image: "https://cdn-icons-png.flaticon.com/512/3595/3595455.png",
+      type: "product-types",
+    },
+    {
       title: "Video Tutorial",
       image: "https://www.techsmith.com/blog/wp-content/uploads/2021/07/video-tutorial.png",
       type: "video",
@@ -56,7 +61,11 @@ export default function KategoriPage() {
   ];
 
   const handleContentClick = (type) => {
-    navigate(`/kategori/${id}/konten/${type}`);
+    if (type === "product-types") {
+      navigate(`/kategori/${id}/tipe-produk`);
+    } else {
+      navigate(`/kategori/${id}/konten/${type}`);
+    }
   };
 
   return (

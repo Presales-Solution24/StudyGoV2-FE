@@ -71,6 +71,8 @@ Coded by www.creative-tim.com
 import Home from "pages/Home";
 import KategoriPage from "pages/KategoriPage";
 import ContentListPage from "pages/ContentListPage";
+import ProductTypePage from "pages/ProductTypePage";
+import ProductSpecPage from "pages/ProductSpecPage";
 
 import Login from "pages/Login";
 import Signup from "pages/Signup";
@@ -107,6 +109,23 @@ const routes = [
       </PrivateRoute>
     ),
   },
+  {
+    route: "/kategori/:id/tipe-produk",
+    component: (
+      <PrivateRoute>
+        <ProductTypePage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    route: "/produk/:productId/spesifikasi",
+    component: (
+      <PrivateRoute>
+        <ProductSpecPage />
+      </PrivateRoute>
+    ),
+  },
+
   {
     route: "/login",
     component: <Login />,
