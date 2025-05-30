@@ -6,6 +6,11 @@ import routes from "../routes";
 import MKBox from "../components/MKBox";
 import MKTypography from "../components/MKTypography";
 import axiosInstance from "../api/axiosInstance";
+import ProductTypeIcon from "../assets/images/Icon/type.png";
+import VideoTutorialIcon from "../assets/images/Icon/video-tutorial.png";
+import SaleskitIcon from "../assets/images/Icon/flyers.png";
+import PDFIcon from "../assets/images/Icon/pdf.png";
+import ComparisonIcon from "../assets/images/Icon/comparison.png";
 
 export default function KategoriPage() {
   const { id } = useParams();
@@ -35,27 +40,27 @@ export default function KategoriPage() {
   const contentTypes = [
     {
       title: "Tipe Produk",
-      image: "https://cdn-icons-png.flaticon.com/512/3595/3595455.png",
+      image: ProductTypeIcon,
       type: "product-types",
     },
     {
       title: "Video Tutorial",
-      image: "https://www.techsmith.com/blog/wp-content/uploads/2021/07/video-tutorial.png",
+      image: VideoTutorialIcon,
       type: "video",
     },
     {
       title: "Saleskit",
-      image: "https://brooksgroup.com/wp-content/uploads/2020/08/sales_presentations.png",
+      image: SaleskitIcon,
       type: "saleskit",
     },
     {
-      title: "Saleskit PDF",
-      image: "https://cdn-icons-png.freepik.com/256/2405/2405161.png",
+      title: "PDF",
+      image: PDFIcon,
       type: "saleskit_pdf",
     },
     {
       title: "Product Comparison",
-      image: "https://www.shutterstock.com/shutterstock/videos/3573221481/thumb/1.jpg",
+      image: ComparisonIcon,
       type: "comparison",
     },
   ];
@@ -102,7 +107,7 @@ export default function KategoriPage() {
                     height="200"
                     image={item.image}
                     alt={item.title}
-                    style={{ objectFit: "cover" }}
+                    style={{ objectFit: "contain" }}
                   />
                   <CardContent>
                     <MKTypography variant="h6" textAlign="center">
