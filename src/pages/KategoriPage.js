@@ -63,6 +63,8 @@ export default function KategoriPage() {
   const handleContentClick = (type) => {
     if (type === "product-types") {
       navigate(`/kategori/${id}/tipe-produk`);
+    } else if (type === "comparison") {
+      navigate(`/kategori/${id}/komparasi-produk`);
     } else {
       navigate(`/kategori/${id}/konten/${type}`);
     }

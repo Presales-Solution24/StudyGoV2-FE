@@ -73,6 +73,7 @@ import KategoriPage from "pages/KategoriPage";
 import ContentListPage from "pages/ContentListPage";
 import ProductTypePage from "pages/ProductTypePage";
 import ProductSpecPage from "pages/ProductSpecPage";
+import ProductComparisonPage from "pages/ProductComparisonPage";
 
 import Login from "pages/Login";
 import Signup from "pages/Signup";
@@ -122,6 +123,14 @@ const routes = [
     component: (
       <PrivateRoute>
         <ProductSpecPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    route: "/kategori/:categoryId/komparasi-produk",
+    component: (
+      <PrivateRoute>
+        <ProductComparisonPage />
       </PrivateRoute>
     ),
   },
