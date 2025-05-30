@@ -132,7 +132,6 @@ export default function ProductComparisonPage() {
                 value={productA}
                 label="Pilih Produk A"
                 onChange={(e) => setProductA(e.target.value)}
-                margin="normal"
                 sx={{ minHeight: 50 }}
               >
                 {products.map((product) => (
@@ -165,7 +164,6 @@ export default function ProductComparisonPage() {
                 value={productB}
                 label="Pilih Produk B"
                 onChange={(e) => setProductB(e.target.value)}
-                margin="normal"
                 sx={{ minHeight: 50 }}
               >
                 {products.map((product) => (
