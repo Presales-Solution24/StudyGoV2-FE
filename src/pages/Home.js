@@ -85,10 +85,10 @@ export default function Home() {
                 >
                   <CardMedia
                     component="img"
-                    height="200"
+                    height="300"
                     image={`http://localhost:5000${cat.image_url}`}
                     alt={cat.name}
-                    style={{ objectFit: "cover" }}
+                    style={{ objectFit: "contain" }}
                   />
                   <CardContent>
                     <MKTypography variant="h5" textAlign="center">
