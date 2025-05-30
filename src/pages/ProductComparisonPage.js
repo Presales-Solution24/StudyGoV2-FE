@@ -137,7 +137,7 @@ export default function ProductComparisonPage() {
               >
                 {products.map((product) => (
                   <MenuItem key={product.id} value={product.id}>
-                    {product.name}
+                    {product.name} - {product.brand}
                   </MenuItem>
                 ))}
               </Select>
@@ -170,7 +170,7 @@ export default function ProductComparisonPage() {
               >
                 {products.map((product) => (
                   <MenuItem key={product.id} value={product.id}>
-                    {product.name}
+                    {product.name} - {product.brand}
                   </MenuItem>
                 ))}
               </Select>
