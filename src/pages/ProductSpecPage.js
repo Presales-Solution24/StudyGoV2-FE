@@ -76,10 +76,10 @@ export default function ProductSpecPage() {
                   {fullImageUrl && (
                     <CardMedia
                       component="img"
-                      height="280"
+                      height="300"
                       image={fullImageUrl}
                       alt={product.name}
-                      sx={{ objectFit: "cover" }}
+                      sx={{ objectFit: "contain" }}
                     />
                   )}
                   <CardContent>
