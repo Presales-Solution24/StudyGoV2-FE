@@ -25,7 +25,9 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const res = await axios.post("https://lentera-be.solution-core.com/api/auth/login-otp", { email });
+      const res = await axios.post("https://lentera-be.solution-core.com/api/auth/login-otp", {
+        email,
+      });
       setOtpSent(true);
       setSuccessMsg(res.data.message || "OTP berhasil dikirim ke email.");
     } catch (err) {

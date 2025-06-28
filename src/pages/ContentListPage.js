@@ -120,13 +120,16 @@ export default function ContentListPage() {
     if (usernames[userId]) return; // skip kalau sudah ada
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://lentera-be.solution-core.com/api/dashboard/profile-by-id/${userId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      });
+      const response = await fetch(
+        `https://lentera-be.solution-core.com/api/dashboard/profile-by-id/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      );
       const data = await response.json();
       setUsernames((prev) => ({ ...prev, [userId]: data.username }));
     } catch (error) {
@@ -139,13 +142,16 @@ export default function ContentListPage() {
     try {
       setLoadingComments(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://lentera-be.solution-core.com/api/content/comment/list/${contentId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      });
+      const response = await fetch(
+        `https://lentera-be.solution-core.com/api/content/comment/list/${contentId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      );
       const data = await response.json();
       setComments(data);
       data.forEach((comment) => {
@@ -212,17 +218,20 @@ export default function ContentListPage() {
   const handleSubmitRating = async (value) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://lentera-be.solution-core.com/api/content/rating/submit`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({
-          content_id: selectedContent.id,
-          rating: value,
-        }),
-      });
+      const response = await fetch(
+        `https://lentera-be.solution-core.com/api/content/rating/submit`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify({
+            content_id: selectedContent.id,
+            rating: value,
+          }),
+        }
+      );
 
       if (response.ok) {
         setUserRating(value);
