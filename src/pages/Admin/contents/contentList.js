@@ -24,7 +24,7 @@ export default function ContentList() {
   const [products, setProducts] = useState([]); // Untuk menyimpan produk
   const isMobile = useMediaQuery("(max-width:600px)");
   const navigate = useNavigate();
-  const BASE_URL = "http://localhost:5000"; // Ganti jika environment berbeda
+  const BASE_URL = "https://lentera-be.solution-core.com"; // Ganti jika environment berbeda
 
   // Fetch daftar konten
   const fetchContents = async () => {

@@ -144,7 +144,7 @@ export default function ProductComparisonPage() {
             {productA && (
               <MKBox mt={2} textAlign="center">
                 <img
-                  src={`http://localhost:5000${getProductImage(productA)}`}
+                  src={`https://lentera-be.solution-core.com${getProductImage(productA)}`}
                   alt="Produk A"
                   style={{ maxWidth: "100%", height: 200, objectFit: "contain" }}
                 />
@@ -176,7 +176,7 @@ export default function ProductComparisonPage() {
             {productB && (
               <MKBox mt={2} textAlign="center">
                 <img
-                  src={`http://localhost:5000${getProductImage(productB)}`}
+                  src={`https://lentera-be.solution-core.com${getProductImage(productB)}`}
                   alt="Produk B"
                   style={{ maxWidth: "100%", height: 200, objectFit: "contain" }}
                 />

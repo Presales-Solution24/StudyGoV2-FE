@@ -46,7 +46,7 @@ export default function ContentListPage() {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/content/list?category_id=${id}&content_type=${type}`,
+        `https://lentera-be.solution-core.com/api/content/list?category_id=${id}&content_type=${type}`,
         {
           method: "GET",
           headers: {
@@ -103,7 +103,7 @@ export default function ContentListPage() {
   const incrementView = async (contentId) => {
     try {
       const token = localStorage.getItem("token");
-      await fetch(`http://localhost:5000/api/content/view/${contentId}`, {
+      await fetch(`https://lentera-be.solution-core.com/api/content/view/${contentId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -120,7 +120,7 @@ export default function ContentListPage() {
     if (usernames[userId]) return; // skip kalau sudah ada
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:5000/api/dashboard/profile-by-id/${userId}`, {
+      const response = await fetch(`https://lentera-be.solution-core.com/api/dashboard/profile-by-id/${userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -139,7 +139,7 @@ export default function ContentListPage() {
     try {
       setLoadingComments(true);
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:5000/api/content/comment/list/${contentId}`, {
+      const response = await fetch(`https://lentera-be.solution-core.com/api/content/comment/list/${contentId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -163,7 +163,7 @@ export default function ContentListPage() {
     if (!newComment.trim()) return;
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:5000/api/content/comment/add`, {
+      const response = await fetch(`https://lentera-be.solution-core.com/api/content/comment/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -191,7 +191,7 @@ export default function ContentListPage() {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:5000/api/content/rating/average/${contentId}`,
+        `https://lentera-be.solution-core.com/api/content/rating/average/${contentId}`,
         {
           method: "GET",
           headers: {
@@ -212,7 +212,7 @@ export default function ContentListPage() {
   const handleSubmitRating = async (value) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:5000/api/content/rating/submit`, {
+      const response = await fetch(`https://lentera-be.solution-core.com/api/content/rating/submit`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -295,7 +295,7 @@ export default function ContentListPage() {
                         ? "https://cdn-icons-png.flaticon.com/512/610/610209.png"
                         : item.content_type === "saleskit_pdf"
                         ? "https://cdn-icons-png.flaticon.com/512/7670/7670113.png"
-                        : `http://localhost:5000${item.file_url}`
+                        : `https://lentera-be.solution-core.com${item.file_url}`
                     }
                     alt={item.title}
                     style={{ objectFit: "cover" }}
@@ -321,13 +321,13 @@ export default function ContentListPage() {
             <DialogContent dividers>
               {selectedContent.content_type === "video" ? (
                 <video
-                  src={`http://localhost:5000${selectedContent.file_url}`}
+                  src={`https://lentera-be.solution-core.com${selectedContent.file_url}`}
                   controls
                   style={{ width: "100%", borderRadius: 8 }}
                 />
               ) : selectedContent.content_type === "saleskit_pdf" ? (
                 <iframe
-                  src={`http://localhost:5000${selectedContent.file_url}`}
+                  src={`https://lentera-be.solution-core.com${selectedContent.file_url}`}
                   title="PDF Viewer"
                   width="100%"
                   height="600px"
@@ -335,7 +335,7 @@ export default function ContentListPage() {
                 />
               ) : (
                 <img
-                  src={`http://localhost:5000${selectedContent.file_url}`}
+                  src={`https://lentera-be.solution-core.com${selectedContent.file_url}`}
                   alt={selectedContent.title}
                   style={{ width: "100%", borderRadius: 8 }}
                 />

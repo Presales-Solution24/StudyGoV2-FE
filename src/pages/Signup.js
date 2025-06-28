@@ -47,7 +47,7 @@ export default function Signup() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/auth/register-otp", formData);
+      await axios.post("https://lentera-be.solution-core.com/api/auth/register-otp", formData);
       setIsOtpSent(true);
       setSuccessMsg("OTP berhasil dikirim ke email.");
     } catch (err) {
@@ -69,7 +69,7 @@ export default function Signup() {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/verify-otp", {
+      const res = await axios.post("https://lentera-be.solution-core.com/api/auth/verify-otp", {
         email: formData.email,
         otp,
       });

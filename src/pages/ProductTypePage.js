@@ -24,7 +24,7 @@ export default function ProductTypePage() {
   const [categoryName, setCategoryName] = useState("");
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const BASE_URL = "http://localhost:5000"; // Ganti jika berbeda
+  const BASE_URL = "https://lentera-be.solution-core.com"; // Ganti jika berbeda
 
   useEffect(() => {
     const fetchProductsAndCategory = async () => {

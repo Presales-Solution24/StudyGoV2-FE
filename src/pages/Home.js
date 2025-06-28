@@ -21,7 +21,7 @@ export default function Home() {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/api/category/list", {
+      const response = await fetch("https://lentera-be.solution-core.com/api/category/list", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +86,7 @@ export default function Home() {
                   <CardMedia
                     component="img"
                     height="300"
-                    image={`http://localhost:5000${cat.image_url}`}
+                    image={`https://lentera-be.solution-core.com${cat.image_url}`}
                     alt={cat.name}
                     style={{ objectFit: "contain" }}
                   />

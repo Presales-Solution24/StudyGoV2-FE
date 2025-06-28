@@ -21,7 +21,7 @@ import DefaultNavbar from "../examples/Navbars/DefaultNavbar";
 import routes from "../routes";
 import MKBox from "../components/MKBox";
 
-const BASE_URL = "http://localhost:5000"; // Ganti sesuai domain backend kamu
+const BASE_URL = "https://lentera-be.solution-core.com"; // Ganti sesuai domain backend kamu
 
 export default function ProductSpecPage() {
   const { productId } = useParams();

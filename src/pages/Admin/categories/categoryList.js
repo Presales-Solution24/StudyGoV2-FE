@@ -24,7 +24,7 @@ export default function CategoryList() {
   const [categories, setCategories] = useState([]);
   const isMobile = useMediaQuery("(max-width:600px)");
   const navigate = useNavigate();
-  const BASE_URL = "http://localhost:5000"; // Ganti sesuai server kamu
+  const BASE_URL = "https://lentera-be.solution-core.com"; // Ganti sesuai server kamu
 
   const fetchCategories = async () => {
     try {
