@@ -6,7 +6,7 @@ import routes from "../routes";
 import MKBox from "../components/MKBox";
 import MKTypography from "../components/MKTypography";
 import axiosInstance from "../api/axiosInstance";
-import ProductTypeIcon from "../assets/images/Icon/type.png";
+import ProductTypeIcon from "../assets/images/Icon/ProductTypeNew.png";
 import VideoTutorialIcon from "../assets/images/Icon/video-tutorial.png";
 import SaleskitIcon from "../assets/images/Icon/flyers.png";
 import PDFIcon from "../assets/images/Icon/pdf.png";
@@ -39,7 +39,7 @@ export default function KategoriPage() {
 
   const contentTypes = [
     {
-      title: "Tipe Produk",
+      title: "Spesifikasi Produk",
       image: ProductTypeIcon,
       type: "product-types",
     },
@@ -54,12 +54,12 @@ export default function KategoriPage() {
       type: "saleskit",
     },
     {
-      title: "PDF",
+      title: "Artikel",
       image: PDFIcon,
       type: "saleskit_pdf",
     },
     {
-      title: "Product Comparison",
+      title: "Komparasi Produk",
       image: ComparisonIcon,
       type: "comparison",
     },
@@ -78,7 +78,7 @@ export default function KategoriPage() {
   return (
     <>
       <DefaultNavbar routes={routes} sticky />
-      <MKBox py={10} px={{ xs: 1.5, sm: 2, md: 3 }}>
+      <MKBox py={15} px={{ xs: 1.5, sm: 2, md: 3 }}>
         <MKTypography variant="h3" textAlign="center" mb={4}>
           {loading ? <CircularProgress size={30} /> : categoryName}
         </MKTypography>
@@ -86,7 +86,7 @@ export default function KategoriPage() {
         {!loading && (
           <Grid container spacing={3} justifyContent="center">
             {contentTypes.map((item, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
+              <Grid item xs={6} sm={6} md={2} key={index}>
                 <Card
                   onClick={() => handleContentClick(item.type)}
                   sx={{
@@ -104,7 +104,7 @@ export default function KategoriPage() {
                 >
                   <CardMedia
                     component="img"
-                    height="200"
+                    height="70"
                     image={item.image}
                     alt={item.title}
                     style={{ objectFit: "contain" }}

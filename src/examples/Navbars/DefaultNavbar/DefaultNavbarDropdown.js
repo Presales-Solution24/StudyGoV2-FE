@@ -53,7 +53,11 @@ function DefaultNavbarDropdown({
           variant="body2"
           lineHeight={1}
           color="inherit"
-          sx={{ alignSelf: "center", "& *": { verticalAlign: "middle" } }}
+          sx={{
+            alignSelf: "center",
+            color: "#1976d2",
+            "& *": { verticalAlign: "middle", color: "#1976d2" },
+          }}
         >
           {icon}
         </MKTypography>
@@ -62,7 +66,7 @@ function DefaultNavbarDropdown({
           fontWeight="regular"
           textTransform="capitalize"
           color={light ? "white" : "dark"}
-          sx={{ ml: 1, mr: 0.25, position: "relative" }}
+          sx={{ ml: 1, mr: 0.25, position: "relative", color: "#1976d2" }}
         >
           {name}
           <MKBox

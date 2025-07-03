@@ -39,6 +39,7 @@ import MKButton from "components/MKButton";
 // Material Kit 2 React example components
 import DefaultNavbarDropdown from "examples/Navbars/DefaultNavbar/DefaultNavbarDropdown";
 import DefaultNavbarMobile from "examples/Navbars/DefaultNavbar/DefaultNavbarMobile";
+import LenteraIcon from "assets/images/Icon/lentera-icon-only.png"; // Tambahkan di bagian import atas
 
 // Material Kit 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";
@@ -524,17 +525,50 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
         })}
       >
         <MKBox display="flex" justifyContent="space-between" alignItems="center">
+          {/* <MKBox
+            component={Link}
+            to="/"
+            lineHeight={1}
+            py={transparent ? 1.5 : 0.75}
+            pl={relative || transparent ? 0 : { xs: 0, lg: 1 }}
+            display="flex"
+            alignItems="center"
+          >
+            <img src={LenteraIcon} alt="Lentera Logo" style={{ height: 28, marginRight: 8 }} />
+            <MKTypography variant="button" fontWeight="bold" color={light ? "white" : "dark"}>
+              {brand}
+            </MKTypography>
+          </MKBox> */}
           <MKBox
             component={Link}
             to="/"
             lineHeight={1}
             py={transparent ? 1.5 : 0.75}
             pl={relative || transparent ? 0 : { xs: 0, lg: 1 }}
+            display="flex"
+            alignItems="center"
           >
+            <MKBox
+              sx={{
+                backgroundColor: "#e6e6e6", // warna background
+                padding: "6px",
+                borderRadius: "30%", // bulat
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 34,
+                width: 34,
+                marginRight: 1,
+                boxShadow: "0 4px 6px rgba(20, 50, 183, 0.48)", // Sedikit bayangan agar mengangkat
+              }}
+            >
+              <img src={LenteraIcon} alt="Lentera Logo" style={{ height: 25, width: 25 }} />
+            </MKBox>
             <MKTypography variant="button" fontWeight="bold" color={light ? "white" : "dark"}>
               {brand}
             </MKTypography>
           </MKBox>
+
           <MKBox
             color="inherit"
             display={{ xs: "none", lg: "flex" }}
@@ -612,7 +646,7 @@ function DefaultNavbar({ brand, routes, transparent, light, action, sticky, rela
 
 // Setting default values for the props of DefaultNavbar
 DefaultNavbar.defaultProps = {
-  brand: "StudyGoV2",
+  brand: "Lentera",
   transparent: false,
   light: false,
   action: false,

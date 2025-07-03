@@ -48,14 +48,19 @@ export default function Home() {
     fetchCategories();
   }, []);
 
-  const handleCategoryClick = (categoryId) => {
-    navigate(`/kategori/${categoryId}`);
+  const handleCategoryClick = (categoryId, categoryName) => {
+    // navigate(`/kategori/${categoryId}`);
+    if (categoryName.toLowerCase() === "software solution") {
+      navigate("/software-solution");
+    } else {
+      navigate(`/kategori/${categoryId}`);
+    }
   };
 
   return (
     <>
       <DefaultNavbar routes={routes} sticky />
-      <MKBox py={10} px={{ xs: 1.5, sm: 2, md: 3 }}>
+      <MKBox py={15} px={{ xs: 1.5, sm: 2, md: 3 }}>
         <MKTypography variant="h3" textAlign="center" mb={4}>
           Pilih Kategori
         </MKTypography>
@@ -67,9 +72,9 @@ export default function Home() {
         ) : (
           <Grid container spacing={3} justifyContent="center">
             {categories.map((cat) => (
-              <Grid item xs={12} sm={6} md={4} key={cat.id}>
+              <Grid item xs={5} sm={6} md={3} key={cat.id}>
                 <Card
-                  onClick={() => handleCategoryClick(cat.id)}
+                  onClick={() => handleCategoryClick(cat.id, cat.name)}
                   sx={{
                     cursor: "pointer",
                     height: "100%",
@@ -85,7 +90,7 @@ export default function Home() {
                 >
                   <CardMedia
                     component="img"
-                    height="300"
+                    height="100"
                     image={`https://lentera-be.solution-core.com${cat.image_url}`}
                     alt={cat.name}
                     style={{ objectFit: "contain" }}

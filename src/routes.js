@@ -70,6 +70,7 @@ Coded by www.creative-tim.com
 
 import Home from "pages/Home";
 import KategoriPage from "pages/KategoriPage";
+import SoftwareSolution from "pages/SoftwareSolution";
 import ContentListPage from "pages/ContentListPage";
 import ProductTypePage from "pages/ProductTypePage";
 import ProductSpecPage from "pages/ProductSpecPage";
@@ -88,9 +89,18 @@ const routes = [
     key: "home",
     route: "/",
     icon: <i className="fas fa-home" />,
+    sx: { color: "#1976d2" },
     component: (
       <PrivateRoute>
         <Home />
+      </PrivateRoute>
+    ),
+  },
+  {
+    route: "/software-solution",
+    component: (
+      <PrivateRoute>
+        <SoftwareSolution />
       </PrivateRoute>
     ),
   },
