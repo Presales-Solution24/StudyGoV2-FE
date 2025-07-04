@@ -1,27 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import { Card, Grid, Alert, TextField, Button, Typography, CircularProgress } from "@mui/material";
+import {
+  Card,
+  Grid,
+  Alert,
+  TextField,
+  Button,
+  Typography,
+  CircularProgress,
+  InputAdornment,
+} from "@mui/material";
 import MKBox from "components/MKBox";
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading] = useState(false);
+  const [usernameError, setUsernameError] = useState(""); // error khusus username
   const navigate = useNavigate();
+
+  const domain = "@ein.epson.co.id";
+
+  const validateUsername = (value) => /^[a-zA-Z0-9_-]*$/.test(value);
+
+  const handleUsernameChange = (e) => {
+    const { value } = e.target;
+    if (validateUsername(value)) {
+      setUsername(value);
+      setUsernameError("");
+    } else {
+      setUsernameError("Hanya huruf, angka, _ atau - yang diperbolehkan.");
+    }
+  };
 
   const handleSendOtp = async () => {
     setErrorMsg("");
     setSuccessMsg("");
 
-    if (!email) {
-      setErrorMsg("Email wajib diisi.");
+    if (!username) {
+      setErrorMsg("Username wajib diisi.");
       return;
     }
+
+    const email = `${username}${domain}`;
 
     setLoading(true);
     try {
@@ -47,6 +73,8 @@ export default function Login() {
       return;
     }
 
+    const email = `${username}${domain}`;
+
     setLoading(true);
     try {
       const res = await axios.post("https://lentera-be.solution-core.com/api/auth/verify-otp", {
@@ -62,6 +90,18 @@ export default function Login() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      setUsername("");
+      setOtp("");
+      setOtpSent(false);
+      setErrorMsg("");
+      setSuccessMsg("");
+      setLoading(false);
+      setUsernameError("");
+    };
+  }, []);
 
   return (
     <MKBox
@@ -101,7 +141,8 @@ export default function Login() {
                 textAlign="center"
                 sx={{ mb: 2, color: "text.secondary" }}
               >
-                Masukkan email kamu dan verifikasi dengan OTP.
+                Masukkan username email EIN kamu tanpa domain @ein.epson.co.id dan verifikasi dengan
+                OTP.
               </Typography>
 
               {errorMsg && (
@@ -118,13 +159,21 @@ export default function Login() {
               <form onSubmit={handleLogin}>
                 <TextField
                   fullWidth
-                  label="Email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  label="Username"
+                  value={username}
+                  onChange={handleUsernameChange}
                   margin="normal"
                   required
                   disabled={otpSent}
+                  helperText={
+                    usernameError
+                      ? usernameError
+                      : `Email EIN : ${username || "<username>"}${domain}`
+                  }
+                  error={Boolean(usernameError)}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">{domain}</InputAdornment>,
+                  }}
                 />
 
                 <Button
@@ -132,7 +181,7 @@ export default function Login() {
                   fullWidth
                   sx={{ mt: 1 }}
                   onClick={handleSendOtp}
-                  disabled={loading || otpSent}
+                  disabled={loading || otpSent || !username || Boolean(usernameError)}
                 >
                   {loading && !otpSent ? <CircularProgress size={20} /> : "Kirim OTP"}
                 </Button>

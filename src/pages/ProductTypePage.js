@@ -35,7 +35,7 @@ export default function ProductTypePage() {
 
         // Ambil produk berdasarkan kategori
         const productRes = await axiosInstance.get("/product/list", {
-          params: { category_id: id },
+          params: { category_id: id, keyword: "Epson" },
         });
         setProducts(productRes.data.products || []);
       } catch (err) {

@@ -23,10 +23,25 @@ export default function Signup() {
   const [successMsg, setSuccessMsg] = useState("");
   const [loadingRegister, setLoadingRegister] = useState(false);
   const [loadingVerify, setLoadingVerify] = useState(false);
+  const [emailError, setEmailError] = useState("");
   const navigate = useNavigate();
+
+  const domain = "@ein.epson.co.id";
+
+  const validateEmailUsername = (value) => /^[a-zA-Z0-9_-]*$/.test(value);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleEmailChange = (e) => {
+    const { value } = e.target;
+    if (validateEmailUsername(value)) {
+      setFormData({ ...formData, email: value });
+      setEmailError("");
+    } else {
+      setEmailError("Hanya huruf, angka, _ atau - yang diperbolehkan.");
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -46,8 +61,14 @@ export default function Signup() {
       return;
     }
 
+    const finalEmail = `${email}${domain}`;
+
     try {
-      await axios.post("https://lentera-be.solution-core.com/api/auth/register-otp", formData);
+      await axios.post("https://lentera-be.solution-core.com/api/auth/register-otp", {
+        username,
+        email: finalEmail,
+        password,
+      });
       setIsOtpSent(true);
       setSuccessMsg("OTP berhasil dikirim ke email.");
     } catch (err) {
@@ -68,9 +89,11 @@ export default function Signup() {
       return;
     }
 
+    const finalEmail = `${formData.email}${domain}`;
+
     try {
       const res = await axios.post("https://lentera-be.solution-core.com/api/auth/verify-otp", {
-        email: formData.email,
+        email: finalEmail,
         otp,
       });
 
@@ -142,16 +165,27 @@ export default function Signup() {
                         onChange={handleChange}
                       />
                     </MKBox>
+
                     <MKBox mb={2}>
                       <MKInput
-                        type="email"
+                        type="text"
                         label="Email"
                         fullWidth
                         name="email"
                         value={formData.email}
-                        onChange={handleChange}
+                        onChange={handleEmailChange}
+                        error={Boolean(emailError)}
+                        helperText={
+                          emailError
+                            ? emailError
+                            : `Email akun : ${formData.email || "<username>"}${domain}`
+                        }
+                        InputProps={{
+                          endAdornment: <InputAdornment position="end">{domain}</InputAdornment>,
+                        }}
                       />
                     </MKBox>
+
                     <MKBox mb={2}>
                       <MKInput
                         type={showPassword ? "text" : "password"}
@@ -171,13 +205,14 @@ export default function Signup() {
                         }}
                       />
                     </MKBox>
+
                     <MKBox mt={2} mb={1}>
                       <MKButton
                         variant="gradient"
                         color="info"
                         fullWidth
                         type="submit"
-                        disabled={loadingRegister}
+                        disabled={loadingRegister || Boolean(emailError)}
                       >
                         {loadingRegister ? (
                           <CircularProgress size={24} color="inherit" />
@@ -198,6 +233,7 @@ export default function Signup() {
                         onChange={(e) => setOtp(e.target.value)}
                       />
                     </MKBox>
+
                     <MKBox mt={2} mb={1}>
                       <MKButton
                         variant="gradient"
@@ -220,7 +256,7 @@ export default function Signup() {
               {!isOtpSent && (
                 <MKBox mt={3} textAlign="center">
                   <MKTypography variant="button" color="text">
-                    Already have an account?{" "}
+                    Sudah punya akun?{" "}
                     <MKTypography
                       component={Link}
                       to="/login"
@@ -229,7 +265,7 @@ export default function Signup() {
                       fontWeight="medium"
                       textGradient
                     >
-                      Sign In
+                      Login
                     </MKTypography>
                   </MKTypography>
                 </MKBox>
