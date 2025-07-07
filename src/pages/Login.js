@@ -26,7 +26,7 @@ export default function Login() {
 
   const domain = "@ein.epson.co.id";
 
-  const validateUsername = (value) => /^[a-zA-Z0-9_-]*$/.test(value);
+  const validateUsername = (value) => /^[a-zA-Z0-9_.-]*$/.test(value);
 
   const handleUsernameChange = (e) => {
     const { value } = e.target;
@@ -34,7 +34,7 @@ export default function Login() {
       setUsername(value);
       setUsernameError("");
     } else {
-      setUsernameError("Hanya huruf, angka, _ atau - yang diperbolehkan.");
+      setUsernameError("Hanya huruf, angka, titik, _ atau - yang diperbolehkan.");
     }
   };
 

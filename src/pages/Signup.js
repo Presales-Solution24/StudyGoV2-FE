@@ -28,7 +28,7 @@ export default function Signup() {
 
   const domain = "@ein.epson.co.id";
 
-  const validateEmailUsername = (value) => /^[a-zA-Z0-9_-]*$/.test(value);
+  const validateEmailUsername = (value) => /^[a-zA-Z0-9_.-]*$/.test(value);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,7 +40,7 @@ export default function Signup() {
       setFormData({ ...formData, email: value });
       setEmailError("");
     } else {
-      setEmailError("Hanya huruf, angka, _ atau - yang diperbolehkan.");
+      setEmailError("Hanya huruf, angka, titik, _ atau - yang diperbolehkan.");
     }
   };
 
