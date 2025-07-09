@@ -75,6 +75,7 @@ import ContentListPage from "pages/ContentListPage";
 import ProductTypePage from "pages/ProductTypePage";
 import ProductSpecPage from "pages/ProductSpecPage";
 import ProductComparisonPage from "pages/ProductComparisonPage";
+import GlosariumPage from "pages/GlosariumPage";
 
 import Login from "pages/Login";
 import Signup from "pages/Signup";
@@ -125,6 +126,14 @@ const routes = [
     component: (
       <PrivateRoute>
         <ProductTypePage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    route: "/kategori/glosarium",
+    component: (
+      <PrivateRoute>
+        <GlosariumPage />
       </PrivateRoute>
     ),
   },

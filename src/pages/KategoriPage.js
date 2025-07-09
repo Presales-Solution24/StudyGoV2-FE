@@ -11,6 +11,7 @@ import VideoTutorialIcon from "../assets/images/Icon/video-tutorial.png";
 import SaleskitIcon from "../assets/images/Icon/flyers.png";
 import PDFIcon from "../assets/images/Icon/pdf.png";
 import ComparisonIcon from "../assets/images/Icon/comparison.png";
+import GlosariumIcon from "../assets/images/Icon/IconGlosarium.png";
 
 export default function KategoriPage() {
   const { id } = useParams();
@@ -63,6 +64,11 @@ export default function KategoriPage() {
       image: ComparisonIcon,
       type: "comparison",
     },
+    {
+      title: "Glosarium",
+      image: GlosariumIcon, // Ganti dengan icon lokal jika ada
+      type: "glossary",
+    },
   ];
 
   const handleContentClick = (type) => {
@@ -70,6 +76,8 @@ export default function KategoriPage() {
       navigate(`/kategori/${id}/tipe-produk`);
     } else if (type === "comparison") {
       navigate(`/kategori/${id}/komparasi-produk`);
+    } else if (type === "glossary") {
+      navigate(`/kategori/glosarium`);
     } else {
       navigate(`/kategori/${id}/konten/${type}`);
     }

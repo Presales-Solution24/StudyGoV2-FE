@@ -83,7 +83,7 @@ export default function ProductTypePage() {
                 </Typography>
               ) : (
                 filteredProducts.map((product) => (
-                  <Grid item xs={12} sm={6} md={4} key={product.id}>
+                  <Grid item xs={6} sm={6} md={4} key={product.id}>
                     <Card
                       onClick={() => handleProductClick(product.id)}
                       sx={{
@@ -97,7 +97,7 @@ export default function ProductTypePage() {
                     >
                       <CardMedia
                         component="img"
-                        height="200"
+                        height="150"
                         image={`${BASE_URL}${product.image_url}`}
                         alt={product.name}
                         style={{ objectFit: "contain" }}

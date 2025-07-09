@@ -39,7 +39,7 @@ import MKButton from "components/MKButton";
 // Material Kit 2 React example components
 import DefaultNavbarDropdown from "examples/Navbars/DefaultNavbar/DefaultNavbarDropdown";
 import DefaultNavbarMobile from "examples/Navbars/DefaultNavbar/DefaultNavbarMobile";
-import LenteraIcon from "assets/images/Icon/lentera-icon-only.png"; // Tambahkan di bagian import atas
+import LenteraIcon from "assets/images/Icon/logo (2).png"; // Tambahkan di bagian import atas
 
 // Material Kit 2 React base styles
 import breakpoints from "assets/theme/base/breakpoints";

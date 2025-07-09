@@ -78,13 +78,13 @@ export default function ContentList() {
       );
     } else if (contentType === "pdf") {
       return (
-        <Button variant="outlined" color="primary" href={fileUrl} target="_blank">
+        <Button variant="contained" color="primary" href={fileUrl} target="_blank">
           PDF
         </Button>
       );
     } else if (contentType === "video") {
       return (
-        <Button variant="outlined" color="primary" href={fileUrl} target="_blank">
+        <Button variant="contained" color="primary" href={fileUrl} target="_blank">
           Video
         </Button>
       );
@@ -93,7 +93,7 @@ export default function ContentList() {
   };
 
   return (
-    <Box p={isMobile ? 2 : 3}>
+    <Box p={isMobile ? 2 : 0}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant={isMobile ? "h5" : "h4"}>Daftar Konten</Typography>
         <Button
