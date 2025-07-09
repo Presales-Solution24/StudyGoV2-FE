@@ -1,3 +1,4 @@
+// ContentListPage.js (refactored dan lebih modular)
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -18,6 +19,12 @@ import DefaultNavbar from "../examples/Navbars/DefaultNavbar";
 import routes from "../routes";
 import MKBox from "../components/MKBox";
 import MKTypography from "../components/MKTypography";
+import IconVideo from "../assets/images/Icon/IconVideo.png";
+
+const CONTENT_ICONS = {
+  video: IconVideo,
+  saleskit_pdf: "/assets/icons/pdf.png",
+};
 
 export default function ContentListPage() {
   const { id, type } = useParams();
@@ -34,55 +41,84 @@ export default function ContentListPage() {
   const [totalRatings, setTotalRatings] = useState(0);
   const [userRating, setUserRating] = useState(0);
 
-  // Ambil konten
   const fetchContents = async () => {
     try {
       const token = localStorage.getItem("token");
-
-      if (!token) {
-        alert("Unauthorized. Silakan login dulu.");
-        navigate("/login");
-        return;
-      }
+      if (!token) return navigate("/login");
 
       const response = await fetch(
         `https://lentera-be.solution-core.com/api/content/list?category_id=${id}&content_type=${type}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-        }
+        { headers: { Authorization: token } }
       );
 
-      if (response.status === 401) {
-        alert("Session habis. Silakan login ulang.");
-        navigate("/login");
-        return;
-      }
-
-      if (!response.ok) {
-        const errorMsg = await response.text();
-        alert(`Gagal ambil konten: ${errorMsg}`);
-        setLoading(false);
-        return;
-      }
-
+      if (response.status === 401) return navigate("/login");
       const data = await response.json();
       setContents(data);
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching content list:", error);
+    } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchContents();
-  }, [id, type]);
+  const fetchUsername = async (userId) => {
+    if (usernames[userId]) return;
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `https://lentera-be.solution-core.com/api/dashboard/profile-by-id/${userId}`,
+        { headers: { Authorization: token } }
+      );
+      const data = await response.json();
+      setUsernames((prev) => ({ ...prev, [userId]: data.username }));
+    } catch (error) {
+      console.error("Error fetching username:", error);
+    }
+  };
 
-  const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+  const fetchComments = async (contentId) => {
+    setLoadingComments(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `https://lentera-be.solution-core.com/api/content/comment/list/${contentId}`,
+        { headers: { Authorization: token } }
+      );
+      const data = await response.json();
+      setComments(data);
+      [...new Set(data.map((c) => c.user_id))].forEach(fetchUsername);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    } finally {
+      setLoadingComments(false);
+    }
+  };
+
+  const incrementView = async (contentId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await fetch(`https://lentera-be.solution-core.com/api/content/view/${contentId}`, {
+        headers: { Authorization: token },
+      });
+    } catch (error) {
+      console.error("Error incrementing view:", error);
+    }
+  };
+
+  const fetchAverageRating = async (contentId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `https://lentera-be.solution-core.com/api/content/rating/average/${contentId}`,
+        { headers: { Authorization: token } }
+      );
+      const data = await response.json();
+      setAverageRating(data.average_rating);
+      setTotalRatings(data.total_ratings);
+    } catch (error) {
+      console.error("Error fetching average rating:", error);
+    }
+  };
 
   const handleOpenModal = (content) => {
     setSelectedContent(content);
@@ -92,182 +128,69 @@ export default function ContentListPage() {
     fetchAverageRating(content.id);
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setSelectedContent(null);
-    setComments([]);
-    setNewComment("");
-  };
-
-  // Hitung view
-  const incrementView = async (contentId) => {
+  const handleSubmitRating = async (value) => {
     try {
       const token = localStorage.getItem("token");
-      await fetch(`https://lentera-be.solution-core.com/api/content/view/${contentId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
+      await fetch(`https://lentera-be.solution-core.com/api/content/rating/submit`, {
+        method: "POST",
+        headers: { Authorization: token, "Content-Type": "application/json" },
+        body: JSON.stringify({ content_id: selectedContent.id, rating: value }),
       });
+      setUserRating(value);
+      fetchAverageRating(selectedContent.id);
     } catch (error) {
-      console.error("Error incrementing view:", error);
+      console.error("Error submitting rating:", error);
     }
   };
 
-  // Ambil username by user_id
-  const fetchUsername = async (userId) => {
-    if (usernames[userId]) return; // skip kalau sudah ada
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `https://lentera-be.solution-core.com/api/dashboard/profile-by-id/${userId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-        }
-      );
-      const data = await response.json();
-      setUsernames((prev) => ({ ...prev, [userId]: data.username }));
-    } catch (error) {
-      console.error("Error fetching username:", error);
-    }
-  };
-
-  // Ambil komentar per konten
-  const fetchComments = async (contentId) => {
-    try {
-      setLoadingComments(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `https://lentera-be.solution-core.com/api/content/comment/list/${contentId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-        }
-      );
-      const data = await response.json();
-      setComments(data);
-      data.forEach((comment) => {
-        fetchUsername(comment.user_id);
-      });
-      setLoadingComments(false);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-      setLoadingComments(false);
-    }
-  };
-
-  // Tambah komentar
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://lentera-be.solution-core.com/api/content/comment/add`, {
+      await fetch(`https://lentera-be.solution-core.com/api/content/comment/add`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({
-          content_id: selectedContent.id,
-          comment_text: newComment,
-        }),
+        headers: { Authorization: token, "Content-Type": "application/json" },
+        body: JSON.stringify({ content_id: selectedContent.id, comment_text: newComment }),
       });
-
-      if (response.ok) {
-        setNewComment("");
-        fetchComments(selectedContent.id);
-      } else {
-        const errorMsg = await response.text();
-        alert(`Gagal kirim komentar: ${errorMsg}`);
-      }
+      setNewComment("");
+      fetchComments(selectedContent.id);
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   };
 
-  const fetchAverageRating = async (contentId) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `https://lentera-be.solution-core.com/api/content/rating/average/${contentId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-        }
-      );
+  useEffect(() => {
+    fetchContents();
+  }, [id, type]);
 
-      const data = await response.json();
-      setAverageRating(data.average_rating);
-      setTotalRatings(data.total_ratings);
-    } catch (error) {
-      console.error("Error fetching average rating:", error);
-    }
-  };
-
-  const handleSubmitRating = async (value) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `https://lentera-be.solution-core.com/api/content/rating/submit`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-          body: JSON.stringify({
-            content_id: selectedContent.id,
-            rating: value,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        setUserRating(value);
-        fetchAverageRating(selectedContent.id);
-      } else {
-        const errorMsg = await response.text();
-        alert(`Gagal kirim rating: ${errorMsg}`);
-      }
-    } catch (error) {
-      console.error("Error submitting rating:", error);
-    }
-  };
+  const getImage = (item) =>
+    CONTENT_ICONS[item.content_type] || `https://lentera-be.solution-core.com${item.file_url}`;
 
   return (
     <>
       <DefaultNavbar routes={routes} sticky />
       <MKBox py={10} px={{ xs: 1.5, sm: 2, md: 3 }}>
         <MKTypography variant="h3" textAlign="center" mb={4}>
-          Konten {capitalize(type)}
+          Konten {type.charAt(0).toUpperCase() + type.slice(1)}
         </MKTypography>
-        <MKTypography variant="h3" textAlign="center" mb={4}>
+        {/* <Button onClick={() => navigate(-1)} variant="contained" sx={{ mb: 3 }}>
+          ← Kembali ke Kategori
+        </Button> */}
+        <MKBox display="flex" justifyContent="center" mb={3}>
           <Button
-            variant="contained"
             onClick={() => navigate(-1)}
+            variant="contained"
             sx={{
-              mb: 3,
               textTransform: "none",
               fontWeight: "bold",
               fontSize: "16px",
-              paddingX: 2,
-              paddingY: 1,
+              px: 3,
+              py: 1.2,
             }}
           >
             ← Kembali ke Kategori
           </Button>
-        </MKTypography>
+        </MKBox>
 
         {loading ? (
           <MKBox display="flex" justifyContent="center" alignItems="center" height="200px">
@@ -275,7 +198,7 @@ export default function ContentListPage() {
           </MKBox>
         ) : contents.length === 0 ? (
           <MKTypography variant="h6" textAlign="center">
-            Belum ada konten untuk kategori ini.
+            Belum ada konten.
           </MKTypography>
         ) : (
           <Grid container spacing={3} justifyContent="center">
@@ -283,37 +206,18 @@ export default function ContentListPage() {
               <Grid item xs={12} sm={6} md={4} key={item.id}>
                 <Card
                   onClick={() => handleOpenModal(item)}
-                  sx={{
-                    borderRadius: 3,
-                    overflow: "hidden",
-                    height: "100%",
-                    cursor: "pointer",
-                    transition: "all 0.25s ease-in-out",
-                    "&:hover": {
-                      transform: "translateY(-4px) scale(1.02)",
-                      boxShadow: 8,
-                    },
-                  }}
-                  elevation={3}
+                  sx={{ cursor: "pointer", transition: "0.3s", "&:hover": { boxShadow: 6 } }}
                 >
                   <CardMedia
                     component="img"
                     height="200"
-                    image={
-                      item.content_type === "video"
-                        ? "https://cdn-icons-png.flaticon.com/512/610/610209.png"
-                        : item.content_type === "saleskit_pdf"
-                        ? "https://cdn-icons-png.flaticon.com/512/7670/7670113.png"
-                        : `https://lentera-be.solution-core.com${item.file_url}`
-                    }
-                    alt={item.title}
+                    image={getImage(item)}
+                    alt={`Thumbnail ${item.title}`}
                     style={{ objectFit: "cover" }}
                   />
                   <CardContent>
-                    <MKTypography variant="h6" mb={1}>
-                      {item.title}
-                    </MKTypography>
-                    <MKTypography variant="body2" color="text.secondary">
+                    <MKTypography variant="h6">{item.title}</MKTypography>
+                    <MKTypography variant="body2" color="text">
                       {item.description}
                     </MKTypography>
                   </CardContent>
@@ -323,21 +227,20 @@ export default function ContentListPage() {
           </Grid>
         )}
 
-        {/* Modal Preview */}
+        {/* Modal */}
         {selectedContent && (
-          <Dialog open={openModal} onClose={handleCloseModal} fullWidth maxWidth="md">
+          <Dialog open={openModal} onClose={() => setOpenModal(false)} fullWidth maxWidth="md">
             <DialogTitle>{selectedContent.title}</DialogTitle>
             <DialogContent dividers>
               {selectedContent.content_type === "video" ? (
                 <video
                   src={`https://lentera-be.solution-core.com${selectedContent.file_url}`}
                   controls
-                  style={{ width: "100%", borderRadius: 8 }}
+                  style={{ width: "100%" }}
                 />
               ) : selectedContent.content_type === "saleskit_pdf" ? (
                 <iframe
                   src={`https://lentera-be.solution-core.com${selectedContent.file_url}`}
-                  title="PDF Viewer"
                   width="100%"
                   height="600px"
                   style={{ border: "none" }}
@@ -346,44 +249,40 @@ export default function ContentListPage() {
                 <img
                   src={`https://lentera-be.solution-core.com${selectedContent.file_url}`}
                   alt={selectedContent.title}
-                  style={{ width: "100%", borderRadius: 8 }}
+                  style={{ width: "100%" }}
                 />
               )}
+
               <MKTypography variant="h6" mt={3}>
                 Rating
               </MKTypography>
-              <MKBox display="flex" alignItems="center" mb={1}>
-                <Rating value={averageRating} precision={0.1} readOnly />
-                <MKTypography variant="body2" ml={1}>
-                  {averageRating.toFixed(1)} ({totalRatings} rating)
-                </MKTypography>
-              </MKBox>
+              <Rating value={averageRating} precision={0.1} readOnly />
+              <MKTypography variant="body2">
+                {averageRating.toFixed(1)} ({totalRatings} rating)
+              </MKTypography>
 
-              <MKTypography variant="body2" mb={0.5}>
+              <MKTypography variant="body2" mt={1}>
                 Beri Rating Kamu:
               </MKTypography>
-              <Rating
-                value={userRating}
-                onChange={(event, newValue) => {
-                  handleSubmitRating(newValue);
-                }}
-                max={5}
-              />
-              {/* Komentar */}
-              <MKTypography variant="h6" mt={3} mb={1}>
+              <Rating value={userRating} onChange={(e, val) => handleSubmitRating(val)} />
+
+              <MKTypography variant="h6" mt={3}>
                 Komentar
               </MKTypography>
               {loadingComments ? (
                 <MKTypography variant="body2">Memuat komentar...</MKTypography>
               ) : (
-                comments.map((comment) => (
-                  <MKBox key={comment.id} mb={1.5} p={1} border="1px solid #ddd" borderRadius={2}>
+                comments.map((c) => (
+                  <MKBox key={c.id} mb={1.5} p={1} border="1px solid #ccc" borderRadius="md">
                     <MKTypography variant="subtitle2" fontWeight="bold">
-                      {usernames[comment.user_id] || "User"}
+                      {usernames[c.user_id] || "User"}
                     </MKTypography>
-                    <MKTypography variant="body2">{comment.comment_text}</MKTypography>
-                    <MKTypography variant="caption" color="text.secondary">
-                      {new Date(comment.created_date).toLocaleString()}
+                    <MKTypography variant="body2">{c.comment_text}</MKTypography>
+                    <MKTypography variant="caption" color="text">
+                      {new Date(c.created_date).toLocaleString("id-ID", {
+                        timeZone: "Asia/Jakarta",
+                        hour12: false,
+                      })}
                     </MKTypography>
                   </MKBox>
                 ))
@@ -403,7 +302,7 @@ export default function ContentListPage() {
               </MKBox>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCloseModal}>Tutup</Button>
+              <Button onClick={() => setOpenModal(false)}>Tutup</Button>
             </DialogActions>
           </Dialog>
         )}
