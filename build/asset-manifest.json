@@ -1,11 +1,19 @@
 {
   "files": {
-    "main.js": "/static/js/main.a36c42a4.js",
+    "main.js": "/static/js/main.86ce36fc.js",
+    "static/media/ProductTypeNew.png": "/static/media/ProductTypeNew.faebffdb791402d08a4b.png",
+    "static/media/logo (2).png": "/static/media/logo (2).5a2d32fda029ff0f1671.png",
+    "static/media/IconGlosarium.png": "/static/media/IconGlosarium.b60bc14fe6b15fe4e045.png",
+    "static/media/IconVideo.png": "/static/media/IconVideo.9a0e21ad97af676433aa.png",
     "static/media/bg-sign-in-basic.jpeg": "/static/media/bg-sign-in-basic.f327db1d0e4b00ba3c81.jpeg",
+    "static/media/video-tutorial.png": "/static/media/video-tutorial.1fd2e5a407c003e9452f.png",
+    "static/media/flyers.png": "/static/media/flyers.63deb685559a739094a0.png",
+    "static/media/comparison.png": "/static/media/comparison.68b55e3144f5bf6db497.png",
+    "static/media/pdf.png": "/static/media/pdf.fa882394f1ea2337b6a2.png",
     "index.html": "/index.html",
-    "main.a36c42a4.js.map": "/static/js/main.a36c42a4.js.map"
+    "main.86ce36fc.js.map": "/static/js/main.86ce36fc.js.map"
   },
   "entrypoints": [
-    "static/js/main.a36c42a4.js"
+    "static/js/main.86ce36fc.js"
   ]
 }
