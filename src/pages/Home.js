@@ -50,7 +50,7 @@ export default function Home() {
 
   const handleCategoryClick = (categoryId, categoryName) => {
     // navigate(`/kategori/${categoryId}`);
-    if (categoryName.toLowerCase() === "software solution") {
+    if (categoryName.toLowerCase() === "solution kit") {
       navigate("/software-solution");
     } else {
       navigate(`/kategori/${categoryId}`);
